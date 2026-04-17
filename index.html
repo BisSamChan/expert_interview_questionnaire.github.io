@@ -1,111 +1,871 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>火場通訊關鍵語詞研究</title>
-    <script src="https://tailwindcss.com"></script>
-    <style>
-        .sticky-thr th { position: sticky; top: 0; background: white; z-index: 10; shadow: 0 2px 2px -1px rgba(0,0,0,0.1); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>火場無線電通訊關鍵語詞研究－專家訪談表</title>
+  <style>
+    :root {
+      --navy: #17324d;
+      --navy-2: #24496f;
+      --slate: #5b6b7c;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #d6dde6;
+      --soft: #f5f8fb;
+      --soft-2: #eef3f8;
+      --accent: #d85c3a;
+      --accent-soft: #fff3ef;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: #e9eef4;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    .workspace {
+      max-width: 1100px;
+      margin: 32px auto 56px;
+      padding: 0 20px;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(19, 41, 67, 0.12);
+      overflow: hidden;
+      margin-bottom: 30px;
+      border: 1px solid rgba(23, 50, 77, 0.08);
+    }
+
+    .cover {
+      min-height: 1400px;
+      position: relative;
+      background:
+        radial-gradient(circle at top right, rgba(216, 92, 58, 0.10), transparent 22%),
+        linear-gradient(145deg, #f9fbfd 0%, #f2f6fa 45%, #eef3f8 100%);
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(23,50,77,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(23,50,77,0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.08));
+      pointer-events: none;
+    }
+
+    .cover-topbar {
+      height: 16px;
+      background: linear-gradient(90deg, var(--navy), var(--navy-2), var(--accent));
+    }
+
+    .cover-body {
+      position: relative;
+      padding: 88px 72px 72px;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(1400px - 16px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: var(--navy-2);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .cover-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin: 0 0 16px;
+    }
+
+    .cover-subtitle {
+      font-size: 20px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+
+    .cover-summary {
+      max-width: 780px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(23,50,77,0.08);
+      border-left: 5px solid var(--accent);
+      border-radius: 18px;
+      padding: 24px 26px;
+      color: var(--slate);
+      font-size: 16px;
+      backdrop-filter: blur(2px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      margin-top: 36px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(23,50,77,0.08);
+      border-radius: 22px;
+      padding: 24px 24px 22px;
+      box-shadow: 0 10px 24px rgba(19, 41, 67, 0.06);
+    }
+
+    .card h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      color: var(--navy);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid rgba(23,50,77,0.08);
+    }
+
+    .pill.accent {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: rgba(216,92,58,0.18);
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .mini-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--soft);
+      border: 1px solid rgba(23,50,77,0.06);
+    }
+
+    .mini-item strong {
+      color: var(--navy);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .research-meta {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 36px;
+    }
+
+    .meta-box {
+      background: rgba(255,255,255,0.88);
+      border-radius: 18px;
+      border: 1px solid rgba(23,50,77,0.08);
+      padding: 18px 18px 16px;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: var(--navy);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 70%, #355d86 100%);
+      color: white;
+      padding: 30px 42px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      top: -50px;
+      width: 220px;
+      height: 220px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-body {
+      padding: 34px 38px 42px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .section {
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .section-title {
+      background: linear-gradient(90deg, var(--soft) 0%, var(--soft-2) 100%);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--navy);
+    }
+
+    .section-tag {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid rgba(23,50,77,0.08);
+      color: var(--slate);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .section-content {
+      padding: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .line,
+    .textarea,
+    .select-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fcfdff;
+      padding: 12px 14px;
+      min-height: 46px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .textarea {
+      min-height: 92px;
+    }
+
+    .checkbox-row,
+    .rating-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 22px;
+      align-items: center;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid rgba(23,50,77,0.06);
+    }
+
+    .box {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--navy-2);
+      border-radius: 4px;
+      display: inline-block;
+      background: white;
+    }
+
+    .subsection {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .subsection:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .subsection h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: var(--navy);
+    }
+
+    .hint-box {
+      background: linear-gradient(90deg, #fff7f3 0%, #fffdfc 100%);
+      border: 1px solid rgba(216,92,58,0.18);
+      border-left: 4px solid var(--accent);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      color: #7a4b3f;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .footer-note {
+      margin-top: 28px;
+      padding: 18px 20px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: rgba(255,255,255,0.92);
+      border-radius: 18px;
+      font-size: 14px;
+    }
+
+    .wwws-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .wwws-item {
+      background: var(--soft);
+      border: 1px solid rgba(23,50,77,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .wwws-item strong {
+      color: var(--navy);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .page-no {
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 10px;
+      padding-right: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .research-meta,
+      .info-grid,
+      .wwws-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-body,
+      .page-body {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .cover-title {
+        font-size: 30px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+      .workspace {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+      .page {
+        box-shadow: none;
+        border-radius: 0;
+        border: 0;
+        margin: 0 0 18px;
+        break-after: page;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-100 text-gray-800 font-sans leading-normal">
+<body>
+  <div class="workspace">
+    <section class="page cover">
+      <div class="cover-topbar"></div>
+      <div class="cover-body">
+        <div class="eyebrow">Expert Interview Form</div>
+        <h1 class="cover-title">火場無線電通訊關鍵語詞研究</h1>
+        <div class="cover-subtitle">專家訪談表版型設計（封面＋內頁）</div>
 
-    <div class="max-w-5xl mx-auto my-10 bg-white shadow-2xl rounded-2xl overflow-hidden">
-        <!-- 標題區 -->
-        <header class="bg-red-700 p-8 text-white">
-            <h1 class="text-2xl font-bold text-center">AI 火場通訊分析系統之多層架構研究</h1>
-            <p class="text-center mt-2 opacity-80 text-sm">結合 ASR 與 NLP 之安全語詞辨識模型</p>
-        </header>
+        <div class="cover-summary">
+          本研究旨在分析火場無線電通訊語句，建立安全導向之關鍵語詞分類，作為語音辨識（ASR）與自然語言處理（NLP）模型之基礎。版型設計以「正式、清晰、可讀、易填寫」為原則，適合紙本訪談、PDF 匯出與 HTML 部署展示。
+        </div>
 
-        <form id="researchForm" class="p-8 space-y-12">
-            
-            <!-- 第一部分：基本資料 -->
-            <section>
-                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-4 text-red-700">一、訪談基本資料</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">職稱</label>
-                        <input type="text" name="title" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">服務單位</label>
-                        <input type="text" name="unit" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">年資</label>
-                        <input type="number" name="years" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
-                    </div>
+        <div class="hero-grid">
+          <div class="card">
+            <h3>研究核心模組</h3>
+            <div class="pill-row">
+              <span class="pill">WWWS 通訊結構</span>
+              <span class="pill">Who / Where / What / State</span>
+              <span class="pill accent">安全語詞辨識</span>
+              <span class="pill accent">Mayday 判斷</span>
+            </div>
+            <div class="mini-list">
+              <div class="mini-item">
+                <strong>研究定位</strong>
+                聚焦安全語詞，而非以戰術操作細節為核心。
+              </div>
+              <div class="mini-item">
+                <strong>資料特性</strong>
+                以火場實務經驗與專家判斷，建立語詞使用與重要性依據。
+              </div>
+              <div class="mini-item">
+                <strong>用途說明</strong>
+                作為 ASR / NLP 模型訓練與安全語意分析之基礎資料。
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>語意分類重點</h3>
+            <div class="mini-list">
+              <div class="mini-item"><strong>危險警示</strong> 例如煙色變化、異常聲音、火勢轉強、環境徵象。</div>
+              <div class="mini-item"><strong>人員狀態</strong> 例如氣量不足、迷失方向、撤離中、裝備異常。</div>
+              <div class="mini-item"><strong>緊急求救</strong> 例如 MAYDAY、未喊 MAYDAY 但已屬危急之情境表述。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="research-meta">
+          <div class="meta-box">
+            <div class="meta-label">Form Style</div>
+            <div class="meta-value">學術簡潔風</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Primary Color</div>
+            <div class="meta-value">深藍＋灰藍</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Accent Color</div>
+            <div class="meta-value">消防橘紅</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <h1>火場無線電通訊關鍵語詞研究－專家訪談表</h1>
+        <p>Research Use Only ・ 匿名處理 ・ 適用於專家訪談 / 紙本列印 / HTML 頁面部署</p>
+      </div>
+      <div class="page-body">
+        <div class="section">
+          <div class="section-title">
+            <h2>一、研究基本資訊</h2>
+            <span class="section-tag">Research Overview</span>
+          </div>
+          <div class="section-content">
+            <div class="field">
+              <label>研究主題</label>
+              <div class="textarea">AI 火場通訊分析系統之多層架構研究：結合 ASR 自動語音辨識與 NLP 自然語言處理之安全語詞辨識模型研究。</div>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>研究說明</label>
+              <div class="textarea">本研究旨在分析火場無線電通訊語句，建立安全導向之關鍵語詞分類，作為語音辨識（ASR）與自然語言處理（NLP）模型之基礎。訪談資料僅供學術研究使用，並採匿名方式處理。</div>
+            </div>
+            <div class="subsection">
+              <h3>本研究架構</h3>
+              <div class="wwws-grid">
+                <div class="wwws-item"><strong>Who</strong> 單位</div>
+                <div class="wwws-item"><strong>Where</strong> 位置</div>
+                <div class="wwws-item"><strong>What</strong> 行動</div>
+                <div class="wwws-item"><strong>State</strong> 狀態</div>
+              </div>
+              <div class="pill-row" style="margin-top:16px;">
+                <span class="pill accent">危險警示 Risk Alarm</span>
+                <span class="pill accent">人員狀態 Personnel Status</span>
+                <span class="pill accent">緊急求救 Mayday</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <h2>二、訪談基本資料</h2>
+            <span class="section-tag">Interview Profile</span>
+          </div>
+          <div class="section-content">
+            <div class="info-grid">
+              <div class="field">
+                <label>訪談日期</label>
+                <div class="line">______________________________</div>
+              </div>
+              <div class="field">
+                <label>訪談方式</label>
+                <div class="checkbox-row">
+                  <span class="check"><span class="box"></span> 面對面</span>
+                  <span class="check"><span class="box"></span> 線上</span>
+                  <span class="check"><span class="box"></span> 其他</span>
                 </div>
-            </section>
+              </div>
+              <div class="field">
+                <label>受訪者職稱</label>
+                <div class="line">______________________________</div>
+              </div>
+              <div class="field">
+                <label>服務單位</label>
+                <div class="line">______________________________</div>
+              </div>
+              <div class="field">
+                <label>年資</label>
+                <div class="line">______________________________ 年</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <!-- 第二部分：三大核取清單 (Checklists) -->
-            <section>
-                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-2 text-red-700">二、語詞使用驗證 (Checklists)</h2>
-                <p class="text-sm text-gray-500 mb-6 italic">此部分請依您的火場實務經驗，針對各語詞進行評估。</p>
+        <div class="section">
+          <div class="section-title">
+            <h2>三、訪談內容（一）背景與經驗</h2>
+            <span class="section-tag">Background</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 是否曾在火場中使用無線電通訊？</h3>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 是</span>
+                <span class="check"><span class="box"></span> 否</span>
+              </div>
+            </div>
+            <div class="subsection">
+              <h3>2. 是否曾遇過通訊困難或判斷壓力情境？</h3>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 是</span>
+                <span class="check"><span class="box"></span> 否</span>
+              </div>
+              <div class="field">
+                <label>如有，請簡述</label>
+                <div class="textarea"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <!-- 類別：人員狀態 (Personnel Status) -->
-                <div class="mb-8 overflow-x-auto border rounded-xl">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="bg-gray-200 sticky-thr text-gray-700">
-                                <th class="p-3 text-left">類別：人員狀態語詞</th>
-                                <th class="p-3 w-32">是否使用</th>
-                                <th class="p-3 w-40">使用頻率</th>
-                                <th class="p-3 w-40">重要性</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            <!-- 範例：氣量不足 -->
-                            <tr>
-                                <td class="p-3 bg-gray-50">
-                                    <p class="font-bold">氣量不足</p>
-                                    <p class="text-xs text-gray-500 italic">「氣不夠」、「準備撤出」</p>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <select name="ps_air_use" class="border rounded p-1"><option>會</option><option>不會</option></select>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <div class="flex justify-around">
-                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="常"> 常</label>
-                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="偶"> 偶</label>
-                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="少"> 少</label>
-                                    </div>
-                                </td>
-                                <td class="p-3">
-                                    <select name="ps_air_imp" class="w-full border rounded p-1"><option>★★★ 非常重要</option><option>★★ 中等重要</option><option>★ 一般</option></select>
-                                </td>
-                            </tr>
-                            <!-- 你可以複製上面的 <tr> 來放入剩下的 11 個語詞 -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+        <div class="section">
+          <div class="section-title">
+            <h2>四、訪談內容（二）語詞使用驗證</h2>
+            <span class="section-tag">Core Assessment</span>
+          </div>
+          <div class="section-content">
+            <div class="hint-box">
+              請依火場實務經驗，針對語詞進行評估。本部分以「安全判斷」為核心，聚焦語詞之實際使用情形、出現頻率與判斷重要程度。建議搭配 Excel 語詞清單逐項填寫。
+            </div>
 
-            <!-- 第三部分：WWWS 結構與開放問題 -->
-            <section>
-                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-4 text-red-700">三、通訊結構判斷 (WWWS)</h2>
-                <div class="space-y-6">
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <p class="font-semibold mb-2">情境判斷：當聽到「A 小隊 進入中」這種不完整語句：</p>
-                        <div class="flex gap-6">
-                            <label><input type="radio" name="wwws_valid" value="足夠" required> 足夠支撐判斷</label>
-                            <label><input type="radio" name="wwws_valid" value="不足" required> 資訊量不足</label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-2">請問是否有「未列於清單中」的危險語詞？</label>
-                        <textarea name="extra_risk" rows="3" class="w-full border-2 rounded-lg p-2 focus:border-red-500" placeholder="例如：異常聲響、煙色變化..."></textarea>
-                    </div>
-                </div>
-            </section>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:20%;">評估面向</th>
+                  <th style="width:36%;">填答方式</th>
+                  <th>說明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>是否使用</strong></td>
+                  <td>□ 會　□ 不會</td>
+                  <td>實務中曾使用或聽過，或幾乎未使用。</td>
+                </tr>
+                <tr>
+                  <td><strong>使用頻率</strong></td>
+                  <td>□ 常　□ 偶爾　□ 少</td>
+                  <td>依火場經驗評估該語詞出現的頻率。</td>
+                </tr>
+                <tr>
+                  <td><strong>重要性</strong></td>
+                  <td>□ ★★★　□ ★★　□ ★</td>
+                  <td>評估語詞對火場風險判斷與安全反應的重要程度。</td>
+                </tr>
+              </tbody>
+            </table>
 
-            <button type="submit" class="w-full bg-red-700 text-white font-bold py-4 rounded-xl hover:bg-red-800 transition-all text-xl shadow-lg">提交研究資料</button>
-        </form>
-    </div>
+            <div class="subsection">
+              <h3>重要性等級說明</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:18%;">等級</th>
+                    <th style="width:24%;">定義</th>
+                    <th>火場判斷意義</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>★★★</strong></td>
+                    <td>非常重要</td>
+                    <td>高度重要，涉及人員危險、緊急狀況或 Mayday 判斷。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>★★</strong></td>
+                    <td>中等重要</td>
+                    <td>中度重要，影響風險評估、戰術調整或安全判斷。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>★</strong></td>
+                    <td>一般</td>
+                    <td>一般資訊，可輔助理解火場情境，但警示性較低。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
-    <script>
-        // 這裡放之前的 Fetch 送到 Google Sheets 的程式碼
-    </script>
+        <div class="footer-note">本頁設計重點為：讓專家快速理解填答方式，降低閱讀負擔，同時保留正式學術文件的層次感與可信度。</div>
+        <div class="page-no">Page 2</div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <h1>專家訪談表－後段內容頁</h1>
+        <p>關鍵語詞判斷 ・ 類別補充 ・ WWWS 結構判斷</p>
+      </div>
+      <div class="page-body">
+        <div class="section">
+          <div class="section-title">
+            <h2>五、訪談內容（三）關鍵語詞判斷</h2>
+            <span class="section-tag">Key Terms</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 請列出您認為「一聽到就會提高警覺」的語詞</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>2. 原因說明</h3>
+              <div class="textarea"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <h2>六、訪談內容（四）危險警示 Risk Alarm</h2>
+            <span class="section-tag">Risk Alarm</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 是否有未列於清單中，但您認為重要的危險警示語詞？</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>2. 該語詞代表何種風險？</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>3. 當該語詞出現時，是否會影響您的判斷或行動？</h3>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <h2>七、訪談內容（五）人員狀態 Personnel Status</h2>
+            <span class="section-tag">Personnel Status</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 是否有未列於清單中，但實務常見的人員狀態語詞？</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>2. 該語詞代表何種狀況？</h3>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 生理</span>
+                <span class="check"><span class="box"></span> 裝備</span>
+                <span class="check"><span class="box"></span> 行動</span>
+              </div>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>3. 該狀況是否會導致人員撤出或輪替？</h3>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <h2>八、訪談內容（六）緊急求救 Mayday</h2>
+            <span class="section-tag">Mayday</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 除了「MAYDAY」外，是否存在未喊 Mayday，但實際已屬危急的語詞或情境？</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>2. 請描述該情境</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>3. 您是否會將其視為等同 Mayday 處理？</h3>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <h2>九、訪談內容（七）通訊結構判斷 WWWS</h2>
+            <span class="section-tag">Structure Judgment</span>
+          </div>
+          <div class="section-content">
+            <div class="subsection">
+              <h3>1. 在火場通訊中，若常出現不完整語句，您會如何判斷？</h3>
+              <div class="hint-box">例如：「A 小隊 二樓」、「A 小隊 進入中」、「A 小隊 氣量不足」</div>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>2. 此類資訊是否足以支撐安全判斷？</h3>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 足夠</span>
+                <span class="check"><span class="box"></span> 不足</span>
+              </div>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>3. 在什麼情況下，您會認為此為危險訊號？</h3>
+              <div class="textarea"></div>
+            </div>
+            <div class="subsection">
+              <h3>4. 您認為完整通訊應包含哪些資訊？（可複選）</h3>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 單位 Who</span>
+                <span class="check"><span class="box"></span> 位置 Where</span>
+                <span class="check"><span class="box"></span> 行動 What</span>
+                <span class="check"><span class="box"></span> 狀態 State</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-note">感謝您撥冗提供寶貴實務經驗，您的意見將有助於建構更具安全導向之火場通訊語詞分類與研究基礎。</div>
+        <div class="page-no">Page 3</div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>
