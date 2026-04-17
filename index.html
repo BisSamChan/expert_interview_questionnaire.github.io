@@ -1022,8 +1022,10 @@
                   data-colloquial-term="${escapeAttr(item.colloquial_term)}"
                   data-radio-phrase="${escapeAttr(item.radio_phrase)}">
                 <td>
-                  <div class="term-main">${item.standard_term}</div>
-                  <div class="term-main">${item.colloquial_term}</div>
+                  <div class="term-main">
+                  ${item.standard_term} / ${item.colloquial_term}
+                  </div>
+
                 <!--<div class="term-sub">標準語詞：${item.standard_term}<br>term_id：${item.term_id}</div>-->
                 </td>
                 <td><div class="radio-box">${item.radio_phrase}</div></td>
