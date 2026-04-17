@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>火場無線電通訊關鍵語詞研究－專家訪談表</title>
-  <style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GUp4L78M88Q-hPX9TQfv4cV37ewQvuvn7oAhKgyGsgP5mf6gOpsOZovpgTStR6psd-v4C9KzXQMk0HEkxjIZKwgbxGYfvIcamibZBhsQVqESdXm7BGQot6CV3b266oDzVTN2qM4gcB_CIQ4k4YJ_AT1dAZ9XBAWWhR9FcPX85OzMjy7GL-uqQOnfOfAl-YZRsgmuzWcCgPQltWBz0Ph81X4isA-aRfHAAQKKIBWxc4c2VwREOBbzuwVu8jXEBI6Qfe1g65oC9ti2PtLGmSx-sA" charset="UTF-8"></script><style>
     :root {
       --navy: #17324d;
       --navy-2: #24496f;
@@ -955,7 +955,7 @@
         { term_id: 'R003', standard_term: '火勢延燒', colloquial_term: '向外延燒', radio_phrase: '火勢向外延燒，注意防護' },
         { term_id: 'R004', standard_term: '濃煙密佈', colloquial_term: '煙很大', radio_phrase: '現場濃煙密布，能見度差' },
         { term_id: 'R005', standard_term: '煙色異常', colloquial_term: '煙是黃色的 or 顏色怪怪的', radio_phrase: '現場煙色異常，注意爆燃風險' },
-        { term_id: 'R006', standard_term: '煙流吸入現象', colloquial_term: '煙在吸 or 像在呼吸', radio_phrase: '現場煙流脈動明顯，注意複燃風險' },
+        { term_id: 'R006', standard_term: '煙流吸入現象', colloquial_term: '煙在吸、像在呼吸', radio_phrase: '現場煙流脈動明顯，注意複燃風險' },
         { term_id: 'R007', standard_term: '煙層下降', colloquial_term: '煙壓很低', radio_phrase: '煙層快速下降，注意閃燃風險' },
         { term_id: 'R008', standard_term: '煙囪效應', colloquial_term: '煙往上竄', radio_phrase: '現場煙囪效應明顯，火勢快速向上延燒' },
         { term_id: 'R009', standard_term: '異常聲響', colloquial_term: '有怪聲 or 有爆裂聲', radio_phrase: '現場出現異常聲響，注意結構或爆炸風險' },
@@ -1074,19 +1074,22 @@
       return '';
     }
 
-    function getBaseMeta() {
+    function generateResponseId() {
+      return 'R' + Date.now();
+    }
+
+    function getBaseMeta(responseId) {
       return {
-        response_id: '',
-        expert_id: '',
-        interview_date: '',
+        response_id: responseId,
+        interview_date: new Date().toISOString(),
         recorder: '',
         global_note: '',
         script_url: ''
       };
     }
 
-    function collectRows() {
-      const meta = getBaseMeta();
+    function collectRows(responseId) {
+      const meta = getBaseMeta(responseId);
       const rows = [];
 
       document.querySelectorAll('.term-row').forEach(tr => {
@@ -1099,7 +1102,6 @@
 
         rows.push({
           response_id: meta.response_id,
-          expert_id: meta.expert_id,
           interview_date: meta.interview_date,
           category: tr.dataset.category,
           term_id: tr.dataset.termId,
@@ -1126,13 +1128,22 @@
     }
 
     function previewCount() {
-      const rows = collectRows();
+      const rows = collectRows('PREVIEW');
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
 
     function submitQuestionnaire() {
-      const rows = collectRows();
-      showStatus(`此版為架構版，目前可送出的資料筆數：${rows.length}。`, 'success');
+      const responseId = generateResponseId();
+      const rows = collectRows(responseId);
+
+      if (rows.length === 0) {
+        showStatus('請至少填寫一筆資料。', 'error');
+        return;
+      }
+
+      if (!confirm('確定送出嗎？')) return;
+
+      showStatus(`目前準備送出 ${rows.length} 筆資料，response_id：${responseId}`, 'success');
     }
 
     function setupTabs() {
