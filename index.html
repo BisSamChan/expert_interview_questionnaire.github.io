@@ -1132,19 +1132,32 @@
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
 
-    function submitQuestionnaire() {
-      const responseId = generateResponseId();
-      const rows = collectRows(responseId);
+  function submitQuestionnaire() {
+  const responseId = generateResponseId();
+  const rows = collectRows(responseId);
 
-      if (rows.length === 0) {
-        showStatus('請至少填寫一筆資料。', 'error');
-        return;
-      }
+  if (rows.length === 0) {
+    showStatus('請至少填寫一筆資料。', 'error');
+    return;
+  }
 
-      if (!confirm('確定送出嗎？')) return;
+  if (!confirm('確定送出嗎？')) return;
 
-      showStatus(`目前準備送出 ${rows.length} 筆資料，response_id：${responseId}`, 'success');
+  fetch("https://script.google.com/macros/s/AKfycbxrG9rx495VvzuyJM75cPcaK2FCsbeDbhHw2M0FTMpSqexAFhRmMpsZA6Fveha41iFD/exec", {
+    method: "POST",
+    body: JSON.stringify(rows),
+    headers: {
+      "Content-Type": "application/json"
     }
+  })
+  .then(res => res.json())
+  .then(data => {
+    showStatus(`送出成功 ✅ 共 ${rows.length} 筆`, 'success');
+  })
+  .catch(err => {
+    showStatus('送出失敗 ❌', 'error');
+  });
+}
 
     function setupTabs() {
       const buttons = document.querySelectorAll('.tab-btn');
