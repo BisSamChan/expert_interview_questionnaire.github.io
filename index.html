@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>火場通訊關鍵語詞研究</title>
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        .sticky-thr th { position: sticky; top: 0; background: white; z-index: 10; shadow: 0 2px 2px -1px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-slate-100 text-gray-800 font-sans leading-normal">
+
+    <div class="max-w-5xl mx-auto my-10 bg-white shadow-2xl rounded-2xl overflow-hidden">
+        <!-- 標題區 -->
+        <header class="bg-red-700 p-8 text-white">
+            <h1 class="text-2xl font-bold text-center">AI 火場通訊分析系統之多層架構研究</h1>
+            <p class="text-center mt-2 opacity-80 text-sm">結合 ASR 與 NLP 之安全語詞辨識模型</p>
+        </header>
+
+        <form id="researchForm" class="p-8 space-y-12">
+            
+            <!-- 第一部分：基本資料 -->
+            <section>
+                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-4 text-red-700">一、訪談基本資料</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">職稱</label>
+                        <input type="text" name="title" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">服務單位</label>
+                        <input type="text" name="unit" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">年資</label>
+                        <input type="number" name="years" class="w-full border-2 rounded-lg p-2 focus:border-red-500 outline-none" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第二部分：三大核取清單 (Checklists) -->
+            <section>
+                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-2 text-red-700">二、語詞使用驗證 (Checklists)</h2>
+                <p class="text-sm text-gray-500 mb-6 italic">此部分請依您的火場實務經驗，針對各語詞進行評估。</p>
+
+                <!-- 類別：人員狀態 (Personnel Status) -->
+                <div class="mb-8 overflow-x-auto border rounded-xl">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-200 sticky-thr text-gray-700">
+                                <th class="p-3 text-left">類別：人員狀態語詞</th>
+                                <th class="p-3 w-32">是否使用</th>
+                                <th class="p-3 w-40">使用頻率</th>
+                                <th class="p-3 w-40">重要性</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <!-- 範例：氣量不足 -->
+                            <tr>
+                                <td class="p-3 bg-gray-50">
+                                    <p class="font-bold">氣量不足</p>
+                                    <p class="text-xs text-gray-500 italic">「氣不夠」、「準備撤出」</p>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <select name="ps_air_use" class="border rounded p-1"><option>會</option><option>不會</option></select>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <div class="flex justify-around">
+                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="常"> 常</label>
+                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="偶"> 偶</label>
+                                        <label class="text-xs"><input type="radio" name="ps_air_freq" value="少"> 少</label>
+                                    </div>
+                                </td>
+                                <td class="p-3">
+                                    <select name="ps_air_imp" class="w-full border rounded p-1"><option>★★★ 非常重要</option><option>★★ 中等重要</option><option>★ 一般</option></select>
+                                </td>
+                            </tr>
+                            <!-- 你可以複製上面的 <tr> 來放入剩下的 11 個語詞 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 第三部分：WWWS 結構與開放問題 -->
+            <section>
+                <h2 class="text-xl font-bold border-l-4 border-red-700 pl-3 mb-4 text-red-700">三、通訊結構判斷 (WWWS)</h2>
+                <div class="space-y-6">
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">情境判斷：當聽到「A 小隊 進入中」這種不完整語句：</p>
+                        <div class="flex gap-6">
+                            <label><input type="radio" name="wwws_valid" value="足夠" required> 足夠支撐判斷</label>
+                            <label><input type="radio" name="wwws_valid" value="不足" required> 資訊量不足</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-2">請問是否有「未列於清單中」的危險語詞？</label>
+                        <textarea name="extra_risk" rows="3" class="w-full border-2 rounded-lg p-2 focus:border-red-500" placeholder="例如：異常聲響、煙色變化..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" class="w-full bg-red-700 text-white font-bold py-4 rounded-xl hover:bg-red-800 transition-all text-xl shadow-lg">提交研究資料</button>
+        </form>
+    </div>
+
+    <script>
+        // 這裡放之前的 Fetch 送到 Google Sheets 的程式碼
+    </script>
+</body>
+</html>
