@@ -17,9 +17,12 @@
       --accent: #d85c3a;
       --accent-soft: #fff3ef;
       --white: #ffffff;
+      --success: #0f766e;
+      --danger: #b91c1c;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -45,7 +48,7 @@
     }
 
     .cover {
-      min-height: 1400px;
+      min-height: 1200px;
       position: relative;
       background:
         radial-gradient(circle at top right, rgba(216, 92, 58, 0.10), transparent 22%),
@@ -74,7 +77,7 @@
       padding: 88px 72px 72px;
       display: flex;
       flex-direction: column;
-      min-height: calc(1400px - 16px);
+      min-height: calc(1200px - 16px);
     }
 
     .eyebrow {
@@ -148,6 +151,26 @@
       color: var(--navy);
     }
 
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .mini-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--soft);
+      border: 1px solid rgba(23,50,77,0.06);
+    }
+
+    .mini-item strong {
+      color: var(--navy);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -169,26 +192,6 @@
       background: var(--accent-soft);
       color: var(--accent);
       border-color: rgba(216,92,58,0.18);
-    }
-
-    .mini-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .mini-item {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: var(--soft);
-      border: 1px solid rgba(23,50,77,0.06);
-    }
-
-    .mini-item strong {
-      color: var(--navy);
-      display: block;
-      margin-bottom: 4px;
-      font-size: 14px;
     }
 
     .research-meta {
@@ -317,8 +320,7 @@
     }
 
     .line,
-    .textarea,
-    .select-box {
+    .textarea {
       border: 1px solid var(--line);
       border-radius: 14px;
       background: #fcfdff;
@@ -332,8 +334,21 @@
       min-height: 92px;
     }
 
-    .checkbox-row,
-    .rating-row {
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--ink);
+      font-family: inherit;
+    }
+
+    .checkbox-row {
       display: flex;
       flex-wrap: wrap;
       gap: 12px 22px;
@@ -451,6 +466,76 @@
       padding-right: 4px;
     }
 
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tabs, .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn, .btn {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tab-btn.active, .btn-primary {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+
+    .btn-secondary {
+      background: var(--soft);
+    }
+
+    .status-box {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      border: 1px solid transparent;
+    }
+
+    .status-box.show { display: block; }
+    .status-success {
+      background: rgba(15,118,110,0.08);
+      color: var(--success);
+      border-color: rgba(15,118,110,0.16);
+    }
+    .status-error {
+      background: rgba(185,28,28,0.08);
+      color: var(--danger);
+      border-color: rgba(185,28,28,0.16);
+    }
+
+    .tab-panel.hidden { display: none; }
+
+    .term-main { font-weight: 800; color: var(--navy); }
+    .term-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .radio-box {
+      background: #fbfcfe;
+      border: 1px solid rgba(23,50,77,0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
     @media (max-width: 900px) {
       .hero-grid,
       .research-meta,
@@ -471,9 +556,7 @@
     }
 
     @media print {
-      body {
-        background: white;
-      }
+      body { background: white; }
       .workspace {
         max-width: none;
         margin: 0;
@@ -653,84 +736,53 @@
           </div>
         </div>
 
-        <div class="section">
-          <div class="section-title">
-            <h2>四、訪談內容（二）語詞使用驗證</h2>
-            <span class="section-tag">Core Assessment</span>
-          </div>
-          <div class="section-content">
-            <div class="hint-box">
-              請依火場實務經驗，針對語詞進行評估。本部分以「安全判斷」為核心，聚焦語詞之實際使用情形、出現頻率與判斷重要程度。建議搭配 Excel 語詞清單逐項填寫。
-            </div>
-
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:20%;">評估面向</th>
-                  <th style="width:36%;">填答方式</th>
-                  <th>說明</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>是否使用</strong></td>
-                  <td>□ 會　□ 不會</td>
-                  <td>實務中曾使用或聽過，或幾乎未使用。</td>
-                </tr>
-                <tr>
-                  <td><strong>使用頻率</strong></td>
-                  <td>□ 常　□ 偶爾　□ 少</td>
-                  <td>依火場經驗評估該語詞出現的頻率。</td>
-                </tr>
-                <tr>
-                  <td><strong>重要性</strong></td>
-                  <td>□ ★★★　□ ★★　□ ★</td>
-                  <td>評估語詞對火場風險判斷與安全反應的重要程度。</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="subsection">
-              <h3>重要性等級說明</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:18%;">等級</th>
-                    <th style="width:24%;">定義</th>
-                    <th>火場判斷意義</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>★★★</strong></td>
-                    <td>非常重要</td>
-                    <td>高度重要，涉及人員危險、緊急狀況或 Mayday 判斷。</td>
-                  </tr>
-                  <tr>
-                    <td><strong>★★</strong></td>
-                    <td>中等重要</td>
-                    <td>中度重要，影響風險評估、戰術調整或安全判斷。</td>
-                  </tr>
-                  <tr>
-                    <td><strong>★</strong></td>
-                    <td>一般</td>
-                    <td>一般資訊，可輔助理解火場情境，但警示性較低。</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer-note">本頁設計重點為：讓專家快速理解填答方式，降低閱讀負擔，同時保留正式學術文件的層次感與可信度。</div>
         <div class="page-no">Page 2</div>
       </div>
     </section>
 
     <section class="page">
       <div class="page-header">
+        <h1>二、語詞評估清單</h1>
+        <p>Checklist 主頁 ・ 三類語詞切換 ・ 互動式評估</p>
+      </div>
+      <div class="page-body">
+        <div class="section">
+          <div class="section-title">
+            <h2>四、訪談內容（二）語詞使用驗證</h2>
+            <span class="section-tag">Checklist Tabs</span>
+          </div>
+          <div class="section-content">
+            <div class="hint-box">
+              本頁為三類語詞互動式勾選清單。請依實務經驗，針對各語詞評估是否使用、使用頻率與重要性。後續若要部署至 Google Sheet，可直接使用本頁的欄位結構與 script 資料陣列。三類語詞清單內容已依你提供的 script 整合為 Personnel_Status、Risk_Alert 與 Mayday。fileciteturn5file0
+            </div>
+
+            <div class="toolbar">
+              <div class="tabs">
+                <button class="tab-btn active" type="button" data-tab="Personnel_Status">人員狀態</button>
+                <button class="tab-btn" type="button" data-tab="Risk_Alert">危險警示</button>
+                <button class="tab-btn" type="button" data-tab="Mayday">緊急求救</button>
+              </div>
+              <div class="actions">
+                <button class="btn btn-secondary" type="button" id="preview_btn">預覽筆數</button>
+                <button class="btn btn-primary" type="button" id="submit_btn">送出到 Google Sheet</button>
+              </div>
+            </div>
+
+            <div id="status_box" class="status-box"></div>
+
+            <div class="tab-panel" data-panel="Personnel_Status"></div>
+            <div class="tab-panel hidden" data-panel="Risk_Alert"></div>
+            <div class="tab-panel hidden" data-panel="Mayday"></div>
+          </div>
+        </div>
+        <div class="page-no">Page 3</div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
         <h1>專家訪談表－後段內容頁</h1>
-        <p>關鍵語詞判斷 ・ 類別補充 ・ WWWS 結構判斷</p>
+        <p>關鍵語詞判斷</p>
       </div>
       <div class="page-body">
         <div class="section">
@@ -749,7 +801,16 @@
             </div>
           </div>
         </div>
+        <div class="page-no">Page 4</div>
+      </div>
+    </section>
 
+    <section class="page">
+      <div class="page-header">
+        <h1>專家訪談表－後段內容頁</h1>
+        <p>危險警示 ・ 人員狀態</p>
+      </div>
+      <div class="page-body">
         <div class="section">
           <div class="section-title">
             <h2>六、訪談內容（四）危險警示 Risk Alarm</h2>
@@ -802,7 +863,16 @@
             </div>
           </div>
         </div>
+        <div class="page-no">Page 5</div>
+      </div>
+    </section>
 
+    <section class="page">
+      <div class="page-header">
+        <h1>專家訪談表－後段內容頁</h1>
+        <p>緊急求救 Mayday</p>
+      </div>
+      <div class="page-body">
         <div class="section">
           <div class="section-title">
             <h2>八、訪談內容（六）緊急求救 Mayday</h2>
@@ -826,7 +896,16 @@
             </div>
           </div>
         </div>
+        <div class="page-no">Page 6</div>
+      </div>
+    </section>
 
+    <section class="page">
+      <div class="page-header">
+        <h1>專家訪談表－後段內容頁</h1>
+        <p>WWWS 結構判斷</p>
+      </div>
+      <div class="page-body">
         <div class="section">
           <div class="section-title">
             <h2>九、訪談內容（七）通訊結構判斷 WWWS</h2>
@@ -861,197 +940,234 @@
             </div>
           </div>
         </div>
-
         <div class="footer-note">感謝您撥冗提供寶貴實務經驗，您的意見將有助於建構更具安全導向之火場通訊語詞分類與研究基礎。</div>
-        <div class="page-no">Page 3</div>
+        <div class="page-no">Page 7</div>
       </div>
     </section>
   </div>
-    <section class="page">
-      <div class="page-header">
-        <h1>專家勾選清單－三類語詞整合頁</h1>
-        <p>人員狀態 ・ 危險警示 ・ 緊急求救 ・ 延用既有學術版型風格</p>
-      </div>
-      <div class="page-body">
-        <div class="section">
-          <div class="section-title">
-            <h2>HTML 部署建議架構</h2>
-            <span class="section-tag">Deployment Structure</span>
-          </div>
-          <div class="section-content">
-            <div class="hint-box">
-              建議將三份 checklist 不要拆成三個完全分離的 HTML，而是整合成同一個系統頁面，以上方分類切換或頁內區塊方式呈現。這樣可維持相同設計語言、方便專家連續填答，也利於後續匯出 JSON 或整合研究資料。
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:24%;">部署層級</th>
-                  <th style="width:26%;">建議做法</th>
-                  <th>用途</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>封面頁</strong></td>
-                  <td>保留既有封面樣式</td>
-                  <td>維持研究正式感與識別性。</td>
-                </tr>
-                <tr>
-                  <td><strong>主控頁</strong></td>
-                  <td>加入三個分類切換按鈕</td>
-                  <td>快速切換「人員狀態 / 危險警示 / 緊急求救」。</td>
-                </tr>
-                <tr>
-                  <td><strong>勾選清單區</strong></td>
-                  <td>每類用同一套表格樣式</td>
-                  <td>統一欄位：標準語詞、口語語詞、無線電語句、是否使用、頻率、重要性。</td>
-                </tr>
-                <tr>
-                  <td><strong>資料輸出</strong></td>
-                  <td>JavaScript 收集表單值</td>
-                  <td>後續可匯出 JSON、CSV，或接後端資料庫。</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        <div class="section">
-          <div class="section-title">
-            <h2>分類切換設計</h2>
-            <span class="section-tag">UI Suggestion</span>
-          </div>
-          <div class="section-content">
-            <div class="pill-row">
-              <span class="pill accent">人員狀態 Personnel Status</span>
-              <span class="pill">危險警示 Risk Alarm</span>
-              <span class="pill">緊急求救 Mayday</span>
-            </div>
-            <div class="hint-box" style="margin-top:16px;">
-              正式 HTML 版可把這三個做成 tab 按鈕。點選後只顯示該分類資料表，版型、顏色、標題列、欄位樣式全部延續前頁設計，不需要重新設計三種風格。
-            </div>
-          </div>
-        </div>
+  <script>
+    const TERMS = {
+      Personnel_Status: [
+        { term_id: 'P001', standard_term: '氣量不足', colloquial_term: '氣不夠', radio_phrase: '氣量不足，準備撤出' },
+        { term_id: 'P002', standard_term: '殘壓警報', colloquial_term: '警報響了', radio_phrase: '殘壓警報啟動，開始撤出' },
+        { term_id: 'P003', standard_term: '體力不支', colloquial_term: '沒力了', radio_phrase: '人員準備撤出輪替' },
+        { term_id: 'P004', standard_term: '呼吸急促', colloquial_term: '很喘', radio_phrase: '人員呼吸急促，需注意氣量' },
+        { term_id: 'P005', standard_term: '出現暈眩', colloquial_term: '頭很暈', radio_phrase: '人員出現暈眩狀況，需協助撤離' },
+        { term_id: 'P006', standard_term: '體溫過高', colloquial_term: '太熱了', radio_phrase: '人員體溫過高，需降溫或撤出' },
+        { term_id: 'P007', standard_term: '人員受傷', colloquial_term: '有人受傷', radio_phrase: '現場有人員受傷' },
+        { term_id: 'P008', standard_term: '裝備異常', colloquial_term: '面罩有問題 / SCBA有問題', radio_phrase: '面罩漏氣 / SCBA異常' },
+        { term_id: 'P009', standard_term: '通訊異常', colloquial_term: '無線電有問題', radio_phrase: '無線電斷續 / 通訊不良' },
+        { term_id: 'P010', standard_term: '迷失方向', colloquial_term: '迷路了', radio_phrase: '人員於內部迷失方向' },
+        { term_id: 'P011', standard_term: '單獨行動', colloquial_term: '一個人在做', radio_phrase: '人員單獨行動，請確認位置' },
+        { term_id: 'P012', standard_term: '身體不適', colloquial_term: '感覺怪怪的', radio_phrase: '對身體、環境感覺異常，先撤出' }
+      ],
+      Risk_Alert: [
+        { term_id: 'R001', standard_term: '全面燃燒', colloquial_term: '火舌竄出', radio_phrase: '現場全面燃燒' },
+        { term_id: 'R002', standard_term: '溫度快速上升', colloquial_term: '越來越熱', radio_phrase: '內部溫度快速上升' },
+        { term_id: 'R003', standard_term: '火勢延燒', colloquial_term: '向外延燒', radio_phrase: '火勢向外延燒，注意防護' },
+        { term_id: 'R004', standard_term: '濃煙密佈', colloquial_term: '煙很大', radio_phrase: '現場濃煙密布，能見度差' },
+        { term_id: 'R005', standard_term: '煙色異常', colloquial_term: '煙是黃色的 / 顏色怪怪的', radio_phrase: '現場煙色異常，注意爆燃風險' },
+        { term_id: 'R006', standard_term: '煙流吸入現象', colloquial_term: '煙在吸、像在呼吸', radio_phrase: '現場煙流脈動明顯，注意複燃風險' },
+        { term_id: 'R007', standard_term: '煙層下降', colloquial_term: '煙壓很低', radio_phrase: '煙層快速下降，注意閃燃風險' },
+        { term_id: 'R008', standard_term: '煙囪效應', colloquial_term: '煙往上竄', radio_phrase: '現場煙囪效應明顯，火勢快速向上延燒' },
+        { term_id: 'R009', standard_term: '異常聲響', colloquial_term: '有怪聲 / 有爆裂聲', radio_phrase: '現場出現異常聲響，注意結構或爆炸風險' },
+        { term_id: 'R010', standard_term: '結構異音', colloquial_term: '有嘎吱聲 / 快塌了', radio_phrase: '建築結構受損、發出異音，注意坍塌立即撤離' },
+        { term_id: 'R011', standard_term: '氣體洩漏聲', colloquial_term: '有嘶嘶聲', radio_phrase: '現場疑似氣體洩漏，注意爆炸風險' },
+        { term_id: 'R012', standard_term: '異常氣流聲', colloquial_term: '有吸氣聲 / 風很怪', radio_phrase: '現場氣流異常，注意複燃風險' },
+        { term_id: 'R013', standard_term: '結構不穩', colloquial_term: '快塌了', radio_phrase: '建築結構不穩，注意坍塌' },
+        { term_id: 'R014', standard_term: '導電風險', colloquial_term: '還沒斷電', radio_phrase: '現場尚未斷電，注意觸電危害' },
+        { term_id: 'R015', standard_term: '爆炸風險', colloquial_term: '有爆炸危險', radio_phrase: '現場可能發生爆炸' },
+        { term_id: 'R016', standard_term: '火載量高', colloquial_term: '東西很多', radio_phrase: '現場火載量高，注意極端火勢' },
+        { term_id: 'R017', standard_term: '動線受阻', colloquial_term: '東西擋住、過不去', radio_phrase: '現場雜物堆積、動線受阻，注意撤退路徑' },
+        { term_id: 'R018', standard_term: '倉儲場所', colloquial_term: '倉庫', radio_phrase: '現場為倉儲場所，火載量高請注意' },
+        { term_id: 'R019', standard_term: '危險物品場所', colloquial_term: '有危險物', radio_phrase: '現場為危險物品場所，注意爆炸風險' },
+        { term_id: 'R020', standard_term: '化學品環境', colloquial_term: '有化學品', radio_phrase: '現場疑似有禁水性物質 / 化學品，注意防護與滅火藥劑選擇' },
+        { term_id: 'R021', standard_term: '地下空間', colloquial_term: '地下室', radio_phrase: '地下空間作業，注意逃生與通風' },
+        { term_id: 'R022', standard_term: '高樓建築', colloquial_term: '高樓', radio_phrase: '高樓建築火警，注意垂直延燒' }
+      ],
+      Mayday: [
+        { term_id: 'M001', standard_term: 'MAYDAY', colloquial_term: 'Mayday', radio_phrase: 'MAYDAY MAYDAY MAYDAY' },
+        { term_id: 'M002', standard_term: '受困', colloquial_term: '被困住了 / 卡住了', radio_phrase: 'MAYDAY 本人受困' },
+        { term_id: 'M003', standard_term: '人員壓困', colloquial_term: '被壓住了', radio_phrase: 'MAYDAY 人員被壓住' },
+        { term_id: 'M004', standard_term: '迷路', colloquial_term: '迷路了 / 不知道在哪', radio_phrase: 'MAYDAY 我迷路 無法確認位置' },
+        { term_id: 'M005', standard_term: '找不到出口', colloquial_term: '找不到出去的路', radio_phrase: 'MAYDAY 找不到出口' },
+        { term_id: 'M006', standard_term: '無法移動', colloquial_term: '動不了', radio_phrase: 'MAYDAY 無法移動' },
+        { term_id: 'M007', standard_term: '氣瓶耗盡', colloquial_term: '沒氣了', radio_phrase: 'MAYDAY 氣瓶耗盡' },
+        { term_id: 'M008', standard_term: '呼吸困難', colloquial_term: '呼吸很困難', radio_phrase: 'MAYDAY 呼吸困難' },
+        { term_id: 'M009', standard_term: '人員受傷', colloquial_term: '受傷了', radio_phrase: 'MAYDAY 人員受傷 無法行動' },
+        { term_id: 'M010', standard_term: '面罩異常', colloquial_term: '面罩有問題', radio_phrase: 'MAYDAY 面罩漏氣' },
+        { term_id: 'M011', standard_term: '呼吸器故障', colloquial_term: '吸不到氣', radio_phrase: 'MAYDAY 呼吸器故障 無法呼吸' },
+        { term_id: 'M012', standard_term: '墜落受傷', colloquial_term: '掉下去了', radio_phrase: 'MAYDAY 人員墜落 受傷' },
+        { term_id: 'M013', standard_term: '請求支援', colloquial_term: '救命 / 快來救', radio_phrase: 'MAYDAY 請求支援' }
+      ]
+    };
 
-        <div class="section">
-          <div class="section-title">
-            <h2>Checklist A：人員狀態</h2>
-            <span class="section-tag">Personnel Status</span>
-          </div>
-          <div class="section-content">
-            <table>
-              <thead>
-                <tr>
-                  <th>標準語詞</th>
-                  <th>台灣口語語詞</th>
-                  <th>無線電語句</th>
-                  <th>是否使用</th>
-                  <th>使用頻率</th>
-                  <th>重要性</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>氣量不足</td><td>氣不夠</td><td>氣量不足，準備撤出</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>殘壓警報</td><td>警報響了</td><td>殘壓警報啟動，開始撤出</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>體力不支</td><td>沒力了</td><td>人員準備撤出輪替</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>呼吸急促</td><td>很喘</td><td>人員呼吸急促，需注意氣量</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>出現暈眩</td><td>頭很暈</td><td>人員出現暈眩狀況，需協助撤離</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>體溫過高</td><td>太熱了</td><td>人員體溫過高，需降溫或撤出</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>人員受傷</td><td>有人受傷</td><td>現場有人員受傷</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>裝備異常</td><td>面罩有問題 / SCBA有問題</td><td>面罩漏氣 / SCBA異常</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>通訊異常</td><td>無線電有問題</td><td>無線電斷續 / 通訊不良</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>迷失方向</td><td>迷路了</td><td>人員於內部迷失方向</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>單獨行動</td><td>一個人在做</td><td>人員單獨行動，請確認位置</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>身體不適</td><td>感覺怪怪的</td><td>對身體、環境感覺異常，先撤出</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    function escapeAttr(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
 
-        <div class="section">
-          <div class="section-title">
-            <h2>Checklist B：危險警示</h2>
-            <span class="section-tag">Risk Alarm</span>
-          </div>
-          <div class="section-content">
-            <table>
-              <thead>
-                <tr>
-                  <th>標準語詞</th>
-                  <th>台灣口語語詞</th>
-                  <th>無線電語句</th>
-                  <th>是否使用</th>
-                  <th>使用頻率</th>
-                  <th>重要性</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>全面燃燒</td><td>火舌竄出</td><td>現場全面燃燒</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>溫度快速上升</td><td>越來越熱</td><td>內部溫度快速上升</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>火勢延燒</td><td>向外延燒</td><td>火勢向外延燒，注意防護</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>濃煙密佈</td><td>煙很大</td><td>現場濃煙密布，能見度差</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>煙色異常</td><td>煙是黃色的 / 顏色怪怪的</td><td>現場煙色異常，注意爆燃風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>煙流吸入現象</td><td>煙在吸、像在呼吸</td><td>現場煙流脈動明顯，注意複燃風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>煙層下降</td><td>煙壓很低</td><td>煙層快速下降，注意閃燃風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>煙囪效應</td><td>煙往上竄</td><td>現場煙囪效應明顯，火勢快速向上延燒</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>異常聲響</td><td>有怪聲 / 有爆裂聲</td><td>現場出現異常聲響，注意結構或爆炸風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>結構異音</td><td>有嘎吱聲 / 快塌了</td><td>建築結構受損、發出異音，注意坍塌立即撤離</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>氣體洩漏聲</td><td>有嘶嘶聲</td><td>現場疑似氣體洩漏，注意爆炸風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>異常氣流聲</td><td>有吸氣聲 / 風很怪</td><td>現場氣流異常，注意複燃風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>結構不穩</td><td>快塌了</td><td>建築結構不穩，注意坍塌</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>導電風險</td><td>還沒斷電</td><td>現場尚未斷電，注意觸電危害</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>爆炸風險</td><td>有爆炸危險</td><td>現場可能發生爆炸</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>火載量高</td><td>東西很多</td><td>現場火載量高，注意極端火勢</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>動線受阻</td><td>東西擋住、過不去</td><td>現場雜物堆積、動線受阻，注意撤退路徑</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>倉儲場所</td><td>倉庫</td><td>現場為倉儲場所，火載量高請注意</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>危險物品場所</td><td>有危險物</td><td>現場為危險物品場所，注意爆炸風險</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>化學品環境</td><td>有化學品</td><td>現場疑似有禁水性物質 / 化學品，注意防護與滅火藥劑選擇</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>地下空間</td><td>地下室</td><td>地下空間作業，注意逃生與通風</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>高樓建築</td><td>高樓</td><td>高樓建築火警，注意垂直延燒</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    function renderTable(category, target) {
+      const rows = TERMS[category] || [];
+      target.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 18%;">台灣口語 / 標準語詞</th>
+              <th style="width: 24%;">無線電語句</th>
+              <th style="width: 11%;">是否使用</th>
+              <th style="width: 11%;">使用頻率</th>
+              <th style="width: 11%;">重要性</th>
+              <th>補充備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(item => `
+              <tr class="term-row"
+                  data-category="${category}"
+                  data-term-id="${item.term_id}"
+                  data-standard-term="${escapeAttr(item.standard_term)}"
+                  data-colloquial-term="${escapeAttr(item.colloquial_term)}"
+                  data-radio-phrase="${escapeAttr(item.radio_phrase)}">
+                <td>
+                  <div class="term-main">${item.colloquial_term}</div>
+                  <div class="term-sub">標準語詞：${item.standard_term}<br>term_id：${item.term_id}</div>
+                </td>
+                <td><div class="radio-box">${item.radio_phrase}</div></td>
+                <td>
+                  <select name="is_used">
+                    <option value="">請選擇</option>
+                    <option value="會">會</option>
+                    <option value="不會">不會</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="frequency">
+                    <option value="">請選擇</option>
+                    <option value="常">常</option>
+                    <option value="偶爾">偶爾</option>
+                    <option value="少">少</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="importance">
+                    <option value="">請選擇</option>
+                    <option value="★★★">★★★</option>
+                    <option value="★★">★★</option>
+                    <option value="★">★</option>
+                  </select>
+                </td>
+                <td><input type="text" name="note" placeholder="如需補充可填寫" /></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
 
-        <div class="section">
-          <div class="section-title">
-            <h2>Checklist C：緊急求救</h2>
-            <span class="section-tag">Mayday</span>
-          </div>
-          <div class="section-content">
-            <table>
-              <thead>
-                <tr>
-                  <th>標準語詞</th>
-                  <th>台灣口語語詞</th>
-                  <th>無線電語句</th>
-                  <th>是否使用</th>
-                  <th>使用頻率</th>
-                  <th>重要性</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>MAYDAY</td><td>Mayday</td><td>MAYDAY MAYDAY MAYDAY</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>受困</td><td>被困住了 / 卡住了</td><td>MAYDAY 本人受困</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>人員壓困</td><td>被壓住了</td><td>MAYDAY 人員被壓住</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>迷路</td><td>迷路了 / 不知道在哪</td><td>MAYDAY 我迷路 無法確認位置</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>找不到出口</td><td>找不到出去的路</td><td>MAYDAY 找不到出口</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>無法移動</td><td>動不了</td><td>MAYDAY 無法移動</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>氣瓶耗盡</td><td>沒氣了</td><td>MAYDAY 氣瓶耗盡</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>呼吸困難</td><td>呼吸很困難</td><td>MAYDAY 呼吸困難</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>人員受傷</td><td>受傷了</td><td>MAYDAY 人員受傷 無法行動</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>面罩異常</td><td>面罩有問題</td><td>MAYDAY 面罩漏氣</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>呼吸器故障</td><td>吸不到氣</td><td>MAYDAY 呼吸器故障 無法呼吸</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>墜落受傷</td><td>掉下去了</td><td>MAYDAY 人員墜落 受傷</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-                <tr><td>請求支援</td><td>救命 / 快來救</td><td>MAYDAY 請求支援</td><td>□會 □不會</td><td>□常 □偶爾 □少</td><td>☆☆☆</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    function toFrequencyScore(freq) {
+      if (freq === '常') return 3;
+      if (freq === '偶爾') return 2;
+      if (freq === '少') return 1;
+      return '';
+    }
 
-        <div class="footer-note">實作時可將三類資料改寫為 JavaScript 陣列，利用同一個 render 函式產生表格，如此能保留設計一致性，也便於後續擴充欄位與匯出研究資料。</div>
-        <div class="page-no">Page 4</div>
-      </div>
-    </section>
+    function toImportanceScore(imp) {
+      if (imp === '★★★') return 3;
+      if (imp === '★★') return 2;
+      if (imp === '★') return 1;
+      return '';
+    }
+
+    function getBaseMeta() {
+      return {
+        response_id: '',
+        expert_id: '',
+        interview_date: '',
+        recorder: '',
+        global_note: '',
+        script_url: ''
+      };
+    }
+
+    function collectRows() {
+      const meta = getBaseMeta();
+      const rows = [];
+
+      document.querySelectorAll('.term-row').forEach(tr => {
+        const isUsed = tr.querySelector('select[name="is_used"]').value;
+        const frequency = tr.querySelector('select[name="frequency"]').value;
+        const importance = tr.querySelector('select[name="importance"]').value;
+        const note = tr.querySelector('input[name="note"]').value.trim();
+
+        if (!isUsed && !frequency && !importance && !note) return;
+
+        rows.push({
+          response_id: meta.response_id,
+          expert_id: meta.expert_id,
+          interview_date: meta.interview_date,
+          category: tr.dataset.category,
+          term_id: tr.dataset.termId,
+          standard_term: tr.dataset.standardTerm,
+          colloquial_term: tr.dataset.colloquialTerm,
+          radio_phrase: tr.dataset.radioPhrase,
+          is_used: isUsed,
+          frequency: frequency,
+          frequency_score: toFrequencyScore(frequency),
+          importance: importance,
+          importance_score: toImportanceScore(importance),
+          note: note,
+          recorder: meta.recorder
+        });
+      });
+
+      return rows;
+    }
+
+    function showStatus(message, type = 'success') {
+      const box = document.getElementById('status_box');
+      box.className = `status-box show ${type === 'success' ? 'status-success' : 'status-error'}`;
+      box.textContent = message;
+    }
+
+    function previewCount() {
+      const rows = collectRows();
+      showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
+    }
+
+    function submitQuestionnaire() {
+      const rows = collectRows();
+      showStatus(`此版為架構版，目前可送出的資料筆數：${rows.length}。`, 'success');
+    }
+
+    function setupTabs() {
+      const buttons = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.tab;
+          buttons.forEach(b => b.classList.toggle('active', b === btn));
+          panels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.panel !== key));
+        });
+      });
+    }
+
+    function init() {
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        renderTable(panel.dataset.panel, panel);
+      });
+      setupTabs();
+      document.getElementById('preview_btn')?.addEventListener('click', previewCount);
+      document.getElementById('submit_btn')?.addEventListener('click', submitQuestionnaire);
+    }
+
+    init();
+  </script>
 </body>
 </html>
