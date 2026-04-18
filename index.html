@@ -1178,8 +1178,11 @@ input[type="checkbox"] {
     }
 
     function generateResponseId() {
-      return 'R' + Date.now();
-    }
+    const now = new Date();
+    const timestamp = now.getTime().toString().slice(-6); // 取得時間戳末6碼
+    const dateStr = now.toISOString().slice(0,10).replace(/-/g, ''); // 20260418
+    return `ID-${dateStr}-${timestamp}`; // 生成如 ID-20260418-543210
+   }
 
     function getBaseMeta(responseId) {
       return {
@@ -1235,27 +1238,26 @@ input[type="checkbox"] {
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
 function submitQuestionnaire() {
-    const responseId = generateResponseId();
+    const responseId = generateResponseId(); // <--- 這裡會自動產生編號
     
-    // 1. 抓取基本資料 (職稱、單位、勾選題、問答題)
     const profileData = {};
+    // 將編號存入基本資料中，方便後台記錄
+    profileData["response_num"] = responseId; 
+
     document.querySelectorAll('input, input[type="date"], textarea, select').forEach(el => {
         if (el.name) profileData[el.name] = el.value;
     });
     
-    // 抓取勾選框 (Radio & Checkbox)
     document.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked').forEach(el => {
         if (!profileData[el.name]) {
             profileData[el.name] = el.value;
         } else {
-            profileData[el.name] += "," + el.value; // 複選題用逗號隔開
+            profileData[el.name] += "," + el.value;
         }
     });
 
-    // 2. 抓取原本的表格資料
     const tableRows = collectRows(responseId);
 
-    // 3. 合併資料送出
     const finalData = {
         profile: profileData,
         tableData: tableRows
@@ -1266,30 +1268,21 @@ function submitQuestionnaire() {
         return;
     }
 
-    if (!confirm('確定送出嗎？')) return;
+    // 在送出前提醒使用者他的編號
+    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
-    // 注意：網址必須在同一行，不可斷行
     fetch("你的Google腳本網址", {
         method: "POST",
         body: JSON.stringify(finalData),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => res.json())
-    .then(data => { showStatus(`成功送出！`, 'success'); })
+    .then(data => { 
+        showStatus(`成功送出！編號：${responseId}`, 'success'); 
+        alert(`送出成功！您的問卷編號是：${responseId}`);
+    })
     .catch(err => { showStatus('送出失敗', 'error'); });
-}    function setupTabs() {
-      const buttons = document.querySelectorAll('.tab-btn');
-      const panels = document.querySelectorAll('.tab-panel');
-
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const key = btn.dataset.tab;
-          buttons.forEach(b => b.classList.toggle('active', b === btn));
-          panels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.panel !== key));
-        });
-      });
-    }
-
+}
     function init() {
       document.querySelectorAll('.tab-panel').forEach(panel => {
         renderTable(panel.dataset.panel, panel);
