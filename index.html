@@ -708,11 +708,11 @@ input[type="checkbox"] {
               </div>
              <div class="checkbox-row">
               <label class="check">
-              <input type="radio" name="interview_method" value="面對面"> 
+              <input type="radio" name="method" value="面對面"> 
               <span>面對面</span>
               </label>
               <label class="check">
-              <input type="radio" name="interview_method" value="線上"> 
+              <input type="radio" name="method" value="線上"> 
               <span>線上</span>
                </label>
               </div>
@@ -744,11 +744,11 @@ input[type="checkbox"] {
               <h3>1. 是否曾在火場中使用無線電通訊？</h3>
                 <div class="checkbox-row">
                 <label class="check">
-                <input type="radio" name="interview_method" value="是"> 
+                <input type="radio" name="q3_1_exp" value="是"> 
                 <span>是</span>
                 </label>
                 <label class="check">
-                <input type="radio" name="interview_method" value="否"> 
+                <input type="radio" name="q3_1_exp" value="否"> 
                 <span>否</span>
                  </label>
                </div>
@@ -757,11 +757,11 @@ input[type="checkbox"] {
               <h3>2. 是否曾遇過通訊困難或判斷壓力情境？</h3>
                  <div class="checkbox-row">
                  <label class="check">
-                 <input type="radio" name="interview_method" value="是"> 
+                 <input type="radio" name="q3_2_stress" value="是"> 
                  <span>是</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="否"> 
+                 <input type="radio" name="q3_2_stress" value="否"> 
                  <span>否</span>
                  </label>
                  </div>
@@ -868,11 +868,11 @@ input[type="checkbox"] {
               <h3>3. 當該語詞出現時，是否會影響您的判斷或行動？</h3>
                <div class="checkbox-row">
                  <label class="check">
-                 <input type="radio" name="interview_method" value="會"> 
+                 <input type="radio" name="q6_3_impact" value="會"> 
                  <span>會</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="不會"> 
+                 <input type="radio" name="q6_3_impact" value="不會"> 
                  <span>不會</span>
                  </label>
                </div>
@@ -896,15 +896,15 @@ input[type="checkbox"] {
               
               <div class="checkbox-row">
                  <label class="check">
-                 <input type="radio" name="interview_method" value="生理"> 
+                 <input type="radio" name="q7_2_type" value="生理"> 
                  <span>生理</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="裝備"> 
+                 <input type="radio" name="q7_2_type" value="裝備"> 
                  <span>裝備</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="行動"> 
+                 <input type="radio" name="q7_2_type" value="行動"> 
                  <span>行動</span>
                  </label>
                </div>
@@ -913,11 +913,11 @@ input[type="checkbox"] {
             <div class="subsection">
               <h3>3. 該狀況是否會導致人員撤出或輪替？</h3>
               <label class="check">
-                 <input type="radio" name="interview_method" value="會"> 
+                 <input type="radio" name="q7_3_evac" value="會"> 
                  <span>會</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="不會"> 
+                 <input type="radio" name="q7_3_evac" value="不會"> 
                  <span>不會</span>
                  </label>
                </div>
@@ -951,11 +951,11 @@ input[type="checkbox"] {
             <div class="subsection">
               <h3>3. 您是否會將其視為等同 Mayday 處理？</h3>
                <label class="check">
-                 <input type="radio" name="interview_method" value="會"> 
+                 <input type="radio" name="q8_3_as_mayday" value="會"> 
                  <span>會</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="不會"> 
+                 <input type="radio" name="q8_3_as_mayday" value="不會"> 
                  <span>不</span>
                  </label>
                </div>
@@ -986,11 +986,11 @@ input[type="checkbox"] {
             <div class="subsection">
               <h3>2. 此類資訊是否足以支撐安全判斷？</h3>
                <label class="check">
-                 <input type="radio" name="interview_method" value="足夠"> 
+                 <input type="radio" name="q9_2_enough" value="足夠"> 
                  <span>足夠</span>
                  </label>
                  <label class="check">
-                 <input type="radio" name="interview_method" value="不足"> 
+                 <input type="radio" name="q9_2_enough" value="不足"> 
                  <span>不足</span>
                  </label>
                </div>
@@ -1271,11 +1271,11 @@ function submitQuestionnaire() {
     // 在送出前提醒使用者他的編號
     if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
-    fetch("你的Google腳本網址", {
-        method: "POST",
-        body: JSON.stringify(finalData),
-        headers: { "Content-Type": "application/json" }
-    })
+    fetch("https://script.google.com/macros/s/AKfycbxBVTc2IzPaFunClJvDQIQebmnna2pCAgdPmqv9226LfUeqtu-BcPHP623ZTsUEIldp/exec", {
+  method: "POST",
+  body: JSON.stringify(finalData),
+  headers: { "Content-Type": "application/json" }
+})
     .then(res => res.json())
     .then(data => { 
         showStatus(`成功送出！編號：${responseId}`, 'success'); 
