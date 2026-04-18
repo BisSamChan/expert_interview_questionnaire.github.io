@@ -1279,7 +1279,7 @@ function submitQuestionnaire() {
 
     showStatus('正在傳送資料...', 'success');
 
-    fetch("https://google.com", {
+    fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
         mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
         body: JSON.stringify(finalData),
