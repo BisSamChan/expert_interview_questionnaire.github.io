@@ -1283,6 +1283,27 @@ function submitQuestionnaire() {
     })
     .catch(err => { showStatus('送出失敗', 'error'); });
 }
+function setupTabs() {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+
+      // 1. 移除所有按鈕的 active 狀態，並隱藏所有面板
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.add('hidden'));
+
+      // 2. 為點擊的按鈕加入 active，並顯示對應面板
+      tab.classList.add('active');
+      const targetPanel = document.querySelector(`.tab-panel[data-panel="${target}"]`);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+      }
+    });
+  });
+}
     function init() {
       document.querySelectorAll('.tab-panel').forEach(panel => {
         renderTable(panel.dataset.panel, panel);
