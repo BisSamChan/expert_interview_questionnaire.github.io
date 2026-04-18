@@ -370,25 +370,35 @@ select:focus {
 
     .checkbox-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px 22px;
+      flex-wrap: nowrap; /* 強制不換行 */
+      gap: 16px;         /* 選項之間的間距 */
       align-items: center;
-    }
+   }
 
    .check {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    padding: 8px 16px;
-    background: var(--soft);
-    border-radius: 12px;
-    transition: 0.2s;
+     display: inline-flex;
+     align-items: center;
+     gap: 8px;          /* 圓圈與文字的間距 */
+     white-space: nowrap; /* 強制文字不換行 */
+     background: var(--soft);
+     padding: 8px 16px;
+     border-radius: 12px;
+     cursor: pointer;
+     min-width: fit-content; /* 根據內容自動調整寬度 */
    }
+
 
    .check:hover {
      background: var(--soft-2);
     }
+
+    input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--accent); /* 變換成你的橘色 */
+   }
 
     .box {
       width: 16px;
@@ -689,8 +699,9 @@ select:focus {
           <div class="section-content">
             <div class="info-grid">
               <div class="field">
-                <label>訪談日期</label>
-                <div class="line">______________________________</div>
+               <label>訪談日期</label>
+               <!-- type="date" 會讓瀏覽器自動彈出日曆選擇器 -->
+               <input type="date" name="interview_date" id="interview_date">
               </div>
              <div class="checkbox-row">
               <label class="check">
