@@ -334,7 +334,7 @@
       min-height: 92px;
     }
 
-    /* 修改這一段，讓外觀更一致 */
+   /* 1. 只有文字、日期類型的輸入框才要 100% 寬度 */
 input,
 input[type="date"],
 input[type="number"],
@@ -346,11 +346,8 @@ select {
   background: #fff;
   padding: 10px 12px;
   font-size: 14px;
-  color: var(--ink);
-  font-family: inherit;
-  box-sizing: border-box;
+  box-sizing: border-box; /* 確保 padding 不會撐破容器 */
 }
-
 
 /* 針對開放式問答的 textarea 加強 */
 textarea.textarea {
@@ -392,13 +389,15 @@ select:focus {
      background: var(--soft-2);
     }
 
-    input[type="radio"] {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    cursor: pointer;
-    accent-color: var(--accent); /* 變換成你的橘色 */
-   }
+    /* 2. 勾選鈕（Radio/Checkbox）必須維持固定大小，不能 100% */
+input[type="radio"],
+input[type="checkbox"] {
+  width: 18px !important;  /* 強制固定寬度 */
+  height: 18px !important; /* 強制固定高度 */
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
 
     .box {
       width: 16px;
