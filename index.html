@@ -1238,50 +1238,61 @@ input[type="checkbox"] {
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
 function submitQuestionnaire() {
-    const responseId = generateResponseId(); // <--- 這裡會自動產生編號
-    
+    const responseId = generateResponseId();
     const profileData = {};
-    // 將編號存入基本資料中，方便後台記錄
     profileData["response_num"] = responseId; 
 
-    document.querySelectorAll('input, input[type="date"], textarea, select').forEach(el => {
-        if (el.name) profileData[el.name] = el.value;
-    });
-    
-    document.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked').forEach(el => {
-        if (!profileData[el.name]) {
-            profileData[el.name] = el.value;
-        } else {
-            profileData[el.name] += "," + el.value;
+    // 1. 只抓取「基本資料」區塊的輸入項，排除表格內的 select 和 input
+    // 透過 selector 排除掉 table 內的元件
+    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        if (el.name) {
+            if (el.type === 'radio' || el.type === 'checkbox') {
+                if (el.checked) {
+                    if (!profileData[el.name]) {
+                        profileData[el.name] = el.value;
+                    } else {
+                        profileData[el.name] += "," + el.value;
+                    }
+                }
+            } else {
+                profileData[el.name] = el.value;
+            }
         }
     });
 
+    // 2. 抓取表格資料
     const tableRows = collectRows(responseId);
+
+    // 3. 嚴格檢查：若 tableRows 為空，給予明顯提示
+    if (tableRows.length === 0) {
+        showStatus('錯誤：請至少在「語詞評估清單」表格中填寫一筆資料（例如選擇是否使用）。', 'error');
+        alert('請至少在分頁表格（人員狀態/危險警示/緊急求救）中選擇一項語詞評估！');
+        return;
+    }
+
+    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
     const finalData = {
         profile: profileData,
         tableData: tableRows
     };
 
-    if (tableRows.length === 0) {
-        showStatus('請至少填寫一筆表格資料。', 'error');
-        return;
-    }
+    showStatus('正在傳送資料...', 'success');
 
-    // 在送出前提醒使用者他的編號
-    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
-
-    fetch("https://script.google.com/macros/s/AKfycbxBVTc2IzPaFunClJvDQIQebmnna2pCAgdPmqv9226LfUeqtu-BcPHP623ZTsUEIldp/exec", {
-  method: "POST",
-  body: JSON.stringify(finalData),
-  headers: { "Content-Type": "application/json" }
-})
-    .then(res => res.json())
-    .then(data => { 
+    fetch("https://google.com", {
+        method: "POST",
+        mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
+        body: JSON.stringify(finalData),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => {
         showStatus(`成功送出！編號：${responseId}`, 'success'); 
         alert(`送出成功！您的問卷編號是：${responseId}`);
     })
-    .catch(err => { showStatus('送出失敗', 'error'); });
+    .catch(err => { 
+        console.error("Submit Error:", err);
+        showStatus('送出失敗，請查看瀏覽器控制台報錯', 'error'); 
+    });
 }
 function setupTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
