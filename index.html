@@ -1253,7 +1253,7 @@ input[type="checkbox"] {
 function submitQuestionnaire() {
     const responseId = generateResponseId();
     
-    // 1. 抓取並檢查表格資料 (原本的表格嚴格檢查)
+    // 1. 檢查表格資料
     const tableResult = collectRows(responseId);
     const tableRows = tableResult.data;
     if (tableResult.incompleteCount > 0) {
@@ -1263,59 +1263,75 @@ function submitQuestionnaire() {
         return;
     }
 
-    // 2. 新增：檢查所有 Radio Button 是否都有勾選
-    // 找出頁面中所有 radio 的 name（例如: method, q3_1_exp, q6_3_impact 等）
-    const radioGroups = [...new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name))];
-    let missingGroups = [];
+    let missingCount = 0;
 
+    // 2. 檢查 Radio Button (單選)
+    const radioGroups = [...new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name))];
     radioGroups.forEach(name => {
         const checked = document.querySelector(`input[name="${name}"]:checked`);
+        const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
         if (!checked) {
-            missingGroups.push(name);
-            // 視覺提示：將沒選的問題區域標示出來
-            const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
+            missingCount++;
             if (container) container.style.borderLeft = '4px solid var(--danger)';
         } else {
-            const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
             if (container) container.style.borderLeft = '';
         }
     });
 
-    if (missingGroups.length > 0) {
-        const msg = "基本資料中有單選題尚未勾選，請檢查紅線標示處。";
+    // 3. 新增：檢查 Checkbox (複選 - 至少要勾一個)
+    const checkboxGroups = [...new Set(Array.from(document.querySelectorAll('input[type="checkbox"]')).map(c => c.name))];
+    checkboxGroups.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
+        if (!checked) {
+            missingCount++;
+            if (container) container.style.borderLeft = '4px solid var(--danger)';
+        } else {
+            if (container) container.style.borderLeft = '';
+        }
+    });
+
+    // 4. 檢查文字框與文字區域 (Text Box & Textarea)
+    const textInputs = document.querySelectorAll('.page-body input:not([name="note"]), .page-body input[type="date"], .page-body textarea');
+    textInputs.forEach(el => {
+        const container = el.closest('.field, .subsection');
+        if (el.value.trim() === "") {
+            missingCount++;
+            if (container) container.style.borderLeft = '4px solid var(--danger)';
+        } else {
+            if (container) container.style.borderLeft = '';
+        }
+    });
+
+    // 5. 攔截邏輯
+    if (missingCount > 0) {
+        const msg = "還有欄位（含單選、複選或文字框）尚未完成，請檢查紅線標示處。";
         showStatus('錯誤：' + msg, 'error');
         alert(msg);
         return;
     }
-
-    // 3. 資料收集 (Profile 部分)
+    // 6. 資料收集與準備送出
     const profileData = {};
     profileData["response_num"] = responseId;
     
-    // 處理一般文字、日期與下拉選單
+    // 收集一般文字資料
     document.querySelectorAll('.page-body input:not(.term-row input):not([type="radio"]):not([type="checkbox"]), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
         if (el.name) profileData[el.name] = el.value;
     });
 
-    // 處理 Radio Button 的值
+    // 收集 Radio 資料
     radioGroups.forEach(name => {
         const checked = document.querySelector(`input[name="${name}"]:checked`);
         profileData[name] = checked ? checked.value : "";
     });
 
-    // 處理 Checkbox (複選題，如 WWWS 結構)
+    // 收集 Checkbox 資料
     const infoContent = Array.from(document.querySelectorAll('input[name="info_content"]:checked')).map(cb => cb.value).join(', ');
     profileData["info_content"] = infoContent;
 
-    // 4. 確認與送出 (鎖定按鈕邏輯)
     if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
     
-    const finalData = {
-        profile: profileData,
-        tableData: tableRows
-    };
-
-    // 鎖定按鈕並執行 Fetch (保持你原本 index 0.1.22 的 fetch 邏輯)
+    // 7. 執行傳送 (鎖定按鈕與 Fetch)
     showStatus('正在傳送資料...', 'success');
     const submitBtn = document.getElementById('submit_btn');
     if (submitBtn) {
@@ -1323,6 +1339,8 @@ function submitQuestionnaire() {
         submitBtn.style.opacity = '0.5';
         submitBtn.textContent = '資料傳送中...';
     }
+
+    const finalData = { profile: profileData, tableData: tableRows };
     fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
         mode: "no-cors",
@@ -1345,6 +1363,7 @@ function submitQuestionnaire() {
         }
     });
 }
+
 function setupTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
