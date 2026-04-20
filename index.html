@@ -1195,37 +1195,50 @@ input[type="checkbox"] {
     }
 
     function collectRows(responseId) {
-      const meta = getBaseMeta(responseId);
-      const rows = [];
-
-      document.querySelectorAll('.term-row').forEach(tr => {
+    const meta = getBaseMeta(responseId);
+    const rows = [];
+    let incompleteCount = 0; // 記錄未填寫完整的行數
+    
+    const allTermRows = document.querySelectorAll('.term-row');
+    
+    allTermRows.forEach(tr => {
         const isUsed = tr.querySelector('select[name="is_used"]').value;
         const frequency = tr.querySelector('select[name="frequency"]').value;
         const importance = tr.querySelector('select[name="importance"]').value;
         const note = tr.querySelector('input[name="note"]').value.trim();
 
-        if (!isUsed && !frequency && !importance && !note) return;
+        // 嚴格檢查：如果「是否使用」、「頻率」、「重要性」任一項沒選，就算不完整
+        if (!isUsed || !frequency || !importance) {
+            incompleteCount++;
+            // 可以順便幫未填寫的行加上紅框視覺提示
+            tr.style.backgroundColor = 'rgba(185, 28, 28, 0.05)';
+        } else {
+            tr.style.backgroundColor = ''; // 已填寫則恢復
+            rows.push({
+                response_id: meta.response_id,
+                interview_date: meta.interview_date,
+                category: tr.dataset.category,
+                term_id: tr.dataset.termId,
+                standard_term: tr.dataset.standardTerm,
+                colloquial_term: tr.dataset.colloquialTerm,
+                radio_phrase: tr.dataset.radioPhrase,
+                is_used: isUsed,
+                frequency: frequency,
+                frequency_score: toFrequencyScore(frequency),
+                importance: importance,
+                importance_score: toImportanceScore(importance),
+                note: note,
+                recorder: meta.recorder
+            });
+        }
+    });
 
-        rows.push({
-          response_id: meta.response_id,
-          interview_date: meta.interview_date,
-          category: tr.dataset.category,
-          term_id: tr.dataset.termId,
-          standard_term: tr.dataset.standardTerm,
-          colloquial_term: tr.dataset.colloquialTerm,
-          radio_phrase: tr.dataset.radioPhrase,
-          is_used: isUsed,
-          frequency: frequency,
-          frequency_score: toFrequencyScore(frequency),
-          importance: importance,
-          importance_score: toImportanceScore(importance),
-          note: note,
-          recorder: meta.recorder
-        });
-      });
-
-      return rows;
-    }
+    return {
+        data: rows,
+        totalRequired: allTermRows.length,
+        incompleteCount: incompleteCount
+    };
+}
 
     function showStatus(message, type = 'success') {
       const box = document.getElementById('status_box');
@@ -1239,44 +1252,34 @@ input[type="checkbox"] {
     }
 function submitQuestionnaire() {
     const responseId = generateResponseId();
-    const profileData = {};
-    profileData["response_num"] = responseId; 
+    
+    // 獲取表格資料與檢查結果
+    const result = collectRows(responseId);
+    const tableRows = result.data;
 
-    // 1. 只抓取「基本資料」區塊的輸入項，排除表格內的 select 和 input
-    // 透過 selector 排除掉 table 內的元件
-    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
-        if (el.name) {
-            if (el.type === 'radio' || el.type === 'checkbox') {
-                if (el.checked) {
-                    if (!profileData[el.name]) {
-                        profileData[el.name] = el.value;
-                    } else {
-                        profileData[el.name] += "," + el.value;
-                    }
-                }
-            } else {
-                profileData[el.name] = el.value;
-            }
-        }
-    });
-
-    // 2. 抓取表格資料
-    const tableRows = collectRows(responseId);
-
-    // 3. 嚴格檢查：若 tableRows 為空，給予明顯提示
-    if (tableRows.length === 0) {
-        showStatus('錯誤：請至少在「語詞評估清單」表格中填寫一筆資料（例如選擇是否使用）。', 'error');
-        alert('請至少在分頁表格（人員狀態/危險警示/緊急求救）中選擇一項語詞評估！');
+    // 3. 嚴格檢查：確保每一列都填了
+    if (result.incompleteCount > 0) {
+        const msg = `表格中還有 ${result.incompleteCount} 條語詞尚未評估完整，請檢查標註紅色的列。`;
+        showStatus('錯誤：' + msg, 'error');
+        alert(msg);
         return;
     }
 
-    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
+    // 原有的基本資料抓取邏輯...
+    const profileData = {};
+    profileData["response_num"] = responseId;
+    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        // ... (保持原樣)
+    });
 
+    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
+    
     const finalData = {
         profile: profileData,
         tableData: tableRows
     };
-
+    
+    
     showStatus('正在傳送資料...', 'success');
 
     fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
