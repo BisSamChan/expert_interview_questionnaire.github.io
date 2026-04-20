@@ -1238,85 +1238,82 @@ input[type="checkbox"] {
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
 function submitQuestionnaire() {
-    const submitBtn = document.getElementById('submit_btn');
     const responseId = generateResponseId();
     const profileData = {};
-    profileData["response_num"] = responseId;
+    profileData["response_num"] = responseId; 
 
-    // --- 1. 嚴格檢查表格是否全數填寫 ---
-    const allTermRows = document.querySelectorAll('.term-row');
-    let isAllFilled = true;
-    let missingRows = 0;
-
-    allTermRows.forEach(tr => {
-        const isUsed = tr.querySelector('select[name="is_used"]').value;
-        const frequency = tr.querySelector('select[name="frequency"]').value;
-        const importance = tr.querySelector('select[name="importance"]').value;
-
-        // 檢查三個下拉選單是否有漏填
-        if (!isUsed || !frequency || !importance) {
-            isAllFilled = false;
-            missingRows++;
-            tr.style.backgroundColor = "rgba(185, 28, 28, 0.08)"; // 標示漏填行為淺紅色
-        } else {
-            tr.style.backgroundColor = ""; 
+    // 1. 只抓取「基本資料」區塊的輸入項，排除表格內的 select 和 input
+    // 透過 selector 排除掉 table 內的元件
+    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        if (el.name) {
+            if (el.type === 'radio' || el.type === 'checkbox') {
+                if (el.checked) {
+                    if (!profileData[el.name]) {
+                        profileData[el.name] = el.value;
+                    } else {
+                        profileData[el.name] += "," + el.value;
+                    }
+                }
+            } else {
+                profileData[el.name] = el.value;
+            }
         }
     });
 
-    if (!isAllFilled) {
-        showStatus(`錯誤：尚有 ${missingRows} 筆語詞未填寫完畢，請檢查所有分頁表格。`, 'error');
-        alert(`請確保所有表格中的「是否使用」、「使用頻率」與「重要性」皆已填寫完畢！`);
+    // 2. 抓取表格資料
+    const tableRows = collectRows(responseId);
+
+    // 3. 嚴格檢查：若 tableRows 為空，給予明顯提示
+    if (tableRows.length === 0) {
+        showStatus('錯誤：請至少在「語詞評估清單」表格中填寫一筆資料（例如選擇是否使用）。', 'error');
+        alert('請至少在分頁表格（人員狀態/危險警示/緊急求救）中選擇一項語詞評估！');
         return;
     }
 
     if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
-    // --- 2. 收集基本資料 ---
-    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
-        if (el.name) {
-            if (el.type === 'radio' || el.type === 'checkbox') {
-                if (el.checked) {
-                    if (!profileData[el.name]) { profileData[el.name] = el.value; } 
-                    else { profileData[el.name] += "," + el.value; }
-                }
-            } else { profileData[el.name] = el.value; }
-        }
-    });
+    const finalData = {
+        profile: profileData,
+        tableData: tableRows
+    };
 
-    const tableRows = collectRows(responseId);
-    const finalData = { profile: profileData, tableData: tableRows };
+    showStatus('正在傳送資料...', 'success');
 
-    // 準備傳送
-    showStatus('正在傳送資料，請稍候...', 'success');
-    submitBtn.disabled = true; // 暫時禁用防止重複點擊
-    submitBtn.innerText = "資料傳送中...";
-
-    // --- 3. 執行傳送 ---
-    fetch("https://google.com", {
+    fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
-        mode: "no-cors", 
+        mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
         body: JSON.stringify(finalData),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => {
-        // --- 4. 傳送成功後的最終狀態 ---
-        showStatus('傳送成功！', 'success');
-        
-        // 鎖定按鈕並更換文字與顏色
-        submitBtn.disabled = true;
-        submitBtn.innerText = "問券資料已傳送，感謝您的填寫及支援，請關閉視窗";
-        submitBtn.style.background = "#5b6b7c"; // 變更為灰色
-        submitBtn.style.width = "auto";
-        submitBtn.style.padding = "12px 24px";
-
-        alert(`問券資料已傳送！\n您的編號是：${responseId}\n感謝您的協助。`);
+        showStatus(`成功送出！編號：${responseId}`, 'success'); 
+        alert(`送出成功！您的問卷編號是：${responseId}`);
     })
     .catch(err => { 
         console.error("Submit Error:", err);
-        showStatus('送出失敗，請檢查網路連線後重試', 'error'); 
-        submitBtn.disabled = false; // 失敗則恢復按鈕
-        submitBtn.innerText = "填寫完成，送出";
+        showStatus('送出失敗，請查看瀏覽器控制台報錯', 'error'); 
     });
+}
+function setupTabs() {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+
+      // 1. 移除所有按鈕的 active 狀態，並隱藏所有面板
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.add('hidden'));
+
+      // 2. 為點擊的按鈕加入 active，並顯示對應面板
+      tab.classList.add('active');
+      const targetPanel = document.querySelector(`.tab-panel[data-panel="${target}"]`);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+      }
+    });
+  });
 }
     function init() {
       document.querySelectorAll('.tab-panel').forEach(panel => {
