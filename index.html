@@ -39,14 +39,12 @@
 
     .page {
       width: 100%;
-      max-width: 1100px; /* 確保所有頁面最大寬度都一致 */
-      margin: 0 auto 30px; /* 置中排列 */
       background: var(--white);
       border-radius: 22px;
       box-shadow: 0 18px 45px rgba(19, 41, 67, 0.12);
       overflow: hidden;
+      margin-bottom: 30px;
       border: 1px solid rgba(23, 50, 77, 0.08);
-      box-sizing: border-box; /* 關鍵：確保邊框不會撐大頁面 */
     }
 
     .cover {
@@ -259,12 +257,10 @@
       z-index: 1;
     }
 
-    /* 確保裡面的容器不會超出頁面 */
     .page-body {
       padding: 34px 38px 42px;
-      width: 100%;
-      box-sizing: border-box;
-     }
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
 
     .section {
       margin-bottom: 24px;
@@ -338,70 +334,38 @@
       min-height: 92px;
     }
 
-   /* 1. 只有文字、日期類型的輸入框才要 100% 寬度 */
-input,
-input[type="date"],
-input[type="number"],
-textarea,
-select {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
-  padding: 10px 12px;
-  font-size: 14px;
-  box-sizing: border-box; /* 確保 padding 不會撐破容器 */
-}
-
-/* 針對開放式問答的 textarea 加強 */
-textarea.textarea {
-  min-height: 100px; /* 給予足夠的填寫空間 */
-  resize: vertical;  /* 允許使用者上下拉動高度，但寬度固定 */
-}
-
-/* 當受訪者點擊輸入框時的視覺回饋（建議加上，體驗較好） */
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--accent); /* 使用你定義的橘色作為焦點色 */
-  background: #fff;
-}
-
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--ink);
+      font-family: inherit;
+    }
 
     .checkbox-row {
       display: flex;
-      flex-wrap: nowrap; /* 強制不換行 */
-      gap: 16px;         /* 選項之間的間距 */
+      flex-wrap: wrap;
+      gap: 12px 22px;
       align-items: center;
-   }
-
-   .check {
-     display: inline-flex;
-     align-items: center;
-     gap: 8px;          /* 圓圈與文字的間距 */
-     white-space: nowrap; /* 強制文字不換行 */
-     background: var(--soft);
-     padding: 8px 16px;
-     border-radius: 12px;
-     cursor: pointer;
-     min-width: fit-content; /* 根據內容自動調整寬度 */
-   }
-
-
-   .check:hover {
-     background: var(--soft-2);
     }
 
-    /* 2. 勾選鈕（Radio/Checkbox）必須維持固定大小，不能 100% */
-input[type="radio"],
-input[type="checkbox"] {
-  width: 18px !important;  /* 強制固定寬度 */
-  height: 18px !important; /* 強制固定高度 */
-  margin: 0;
-  cursor: pointer;
-  accent-color: var(--accent);
-}
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid rgba(23,50,77,0.06);
+    }
 
     .box {
       width: 16px;
@@ -702,34 +666,29 @@ input[type="checkbox"] {
           <div class="section-content">
             <div class="info-grid">
               <div class="field">
-               <label>訪談日期</label>
-               <!-- type="date" 會讓瀏覽器自動彈出日曆選擇器 -->
-               <input type="date" name="interview_date" id="interview_date">
+                <label>訪談日期</label>
+                <div class="line">______________________________</div>
               </div>
-             <div class="checkbox-row">
-              <label class="check">
-              <input type="radio" name="method" value="面對面"> 
-              <span>面對面</span>
-              </label>
-              <label class="check">
-              <input type="radio" name="method" value="線上"> 
-              <span>線上</span>
-               </label>
+              <div class="field">
+                <label>訪談方式</label>
+                <div class="checkbox-row">
+                  <span class="check"><span class="box"></span> 面對面</span>
+                  <span class="check"><span class="box"></span> 線上</span>
+                  <span class="check"><span class="box"></span> 其他</span>
+                </div>
               </div>
               <div class="field">
                 <label>受訪者職稱</label>
-                <input type="text" name="interviewee_title" placeholder="請輸入職稱">
+                <div class="line">______________________________</div>
               </div>
- 
-             <div class="field">
-               <label>服務單位</label>
-               <input type="text" name="interviewee_dept" placeholder="請輸入單位">
-             </div>
-
-            <div class="field">
-              <label>年資</label>
-              <input type="text" name="interviewee_years" style="width: 80px;"> 年
-           </div>
+              <div class="field">
+                <label>服務單位</label>
+                <div class="line">______________________________</div>
+              </div>
+              <div class="field">
+                <label>年資</label>
+                <div class="line">______________________________ 年</div>
+              </div>
             </div>
           </div>
         </div>
@@ -742,32 +701,20 @@ input[type="checkbox"] {
           <div class="section-content">
             <div class="subsection">
               <h3>1. 是否曾在火場中使用無線電通訊？</h3>
-                <div class="checkbox-row">
-                <label class="check">
-                <input type="radio" name="q3_1_exp" value="是"> 
-                <span>是</span>
-                </label>
-                <label class="check">
-                <input type="radio" name="q3_1_exp" value="否"> 
-                <span>否</span>
-                 </label>
-               </div>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 是</span>
+                <span class="check"><span class="box"></span> 否</span>
+              </div>
             </div>
             <div class="subsection">
               <h3>2. 是否曾遇過通訊困難或判斷壓力情境？</h3>
-                 <div class="checkbox-row">
-                 <label class="check">
-                 <input type="radio" name="q3_2_stress" value="是"> 
-                 <span>是</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q3_2_stress" value="否"> 
-                 <span>否</span>
-                 </label>
-                 </div>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 是</span>
+                <span class="check"><span class="box"></span> 否</span>
+              </div>
               <div class="field">
-                <h3>如有，請簡述</h3>
-                <textarea name="q5_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+                <label>如有，請簡述</label>
+                <div class="textarea"></div>
               </div>
             </div>
           </div>
@@ -830,14 +777,12 @@ input[type="checkbox"] {
           <div class="section-content">
             <div class="subsection">
               <h3>1. 請列出您認為「一聽到就會提高警覺」的語詞</h3>
-              <textarea name="q5_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
-
             <div class="subsection">
               <h3>2. 原因說明</h3>
-              <textarea name="q5_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
-
           </div>
         </div>
         <div class="page-no">Page 4</div>
@@ -858,25 +803,18 @@ input[type="checkbox"] {
           <div class="section-content">
             <div class="subsection">
               <h3>1. 是否有未列於清單中，但您認為重要的危險警示語詞？</h3>
-              <textarea name="q6_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>2. 該語詞代表何種風險？</h3>
-              <textarea name="q6_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>3. 當該語詞出現時，是否會影響您的判斷或行動？</h3>
-               <div class="checkbox-row">
-                 <label class="check">
-                 <input type="radio" name="q6_3_impact" value="會"> 
-                 <span>會</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q6_3_impact" value="不會"> 
-                 <span>不會</span>
-                 </label>
-               </div>
-
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
             </div>
           </div>
         </div>
@@ -888,39 +826,24 @@ input[type="checkbox"] {
           </div>
           <div class="section-content">
             <div class="subsection">
-              <h3>1.  是否有未列於清單中，但實務常見的人員狀態語詞？</h3>
-              <textarea name="q7_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <h3>1. 是否有未列於清單中，但實務常見的人員狀態語詞？</h3>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>2. 該語詞代表何種狀況？</h3>
-              
-              <div class="checkbox-row">
-                 <label class="check">
-                 <input type="radio" name="q7_2_type" value="生理"> 
-                 <span>生理</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q7_2_type" value="裝備"> 
-                 <span>裝備</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q7_2_type" value="行動"> 
-                 <span>行動</span>
-                 </label>
-               </div>
-              <textarea name="q7_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 生理</span>
+                <span class="check"><span class="box"></span> 裝備</span>
+                <span class="check"><span class="box"></span> 行動</span>
+              </div>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>3. 該狀況是否會導致人員撤出或輪替？</h3>
-              <label class="check">
-                 <input type="radio" name="q7_3_evac" value="會"> 
-                 <span>會</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q7_3_evac" value="不會"> 
-                 <span>不會</span>
-                 </label>
-               </div>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
             </div>
           </div>
         </div>
@@ -942,23 +865,18 @@ input[type="checkbox"] {
           <div class="section-content">
             <div class="subsection">
               <h3>1. 除了「MAYDAY」外，是否存在未喊 Mayday，但實際已屬危急的語詞或情境？</h3>
-              <textarea name="q8_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>2. 請描述該情境</h3>
-              <textarea name="q8_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>3. 您是否會將其視為等同 Mayday 處理？</h3>
-               <label class="check">
-                 <input type="radio" name="q8_3_as_mayday" value="會"> 
-                 <span>會</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q8_3_as_mayday" value="不會"> 
-                 <span>不</span>
-                 </label>
-               </div>
+              <div class="checkbox-row">
+                <span class="check"><span class="box"></span> 會</span>
+                <span class="check"><span class="box"></span> 不會</span>
+              </div>
             </div>
           </div>
         </div>
@@ -981,49 +899,28 @@ input[type="checkbox"] {
             <div class="subsection">
               <h3>1. 在火場通訊中，若常出現不完整語句，您會如何判斷？</h3>
               <div class="hint-box">例如：「A 小隊 二樓」、「A 小隊 進入中」、「A 小隊 氣量不足」</div>
-              <textarea name="q9_key_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>2. 此類資訊是否足以支撐安全判斷？</h3>
-               <label class="check">
-                 <input type="radio" name="q9_2_enough" value="足夠"> 
-                 <span>足夠</span>
-                 </label>
-                 <label class="check">
-                 <input type="radio" name="q9_2_enough" value="不足"> 
-                 <span>不足</span>
-                 </label>
-               </div>
-              <textarea name="q9_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
+              <div class="checkbox-row" style="margin-bottom:12px;">
+                <span class="check"><span class="box"></span> 足夠</span>
+                <span class="check"><span class="box"></span> 不足</span>
+              </div>
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>3. 在什麼情況下，您會認為此為危險訊號？</h3>
-              <textarea name="q10_reasom_terms" class="textarea" placeholder="請在此輸入文字..."></textarea>
-
+              <div class="textarea"></div>
             </div>
             <div class="subsection">
               <h3>4. 您認為完整通訊應包含哪些資訊？（可複選）</h3>
               <div class="checkbox-row">
-               <label class="check">
-               <input type="checkbox" name="info_content" value="Who">
-               <span>單位 Who</span>
-               </label>
-  
-               <label class="check">
-               <input type="checkbox" name="info_content" value="Where">
-               <span>位置 Where</span>
-               </label>
-  
-               <label class="check">
-               <input type="checkbox" name="info_content" value="What">
-               <span>行動 What</span>
-               </label>
-  
-               <label class="check">
-               <input type="checkbox" name="info_content" value="State">
-               <span>狀態 State</span>
-               </label>
-             </div>
+                <span class="check"><span class="box"></span> 單位 Who</span>
+                <span class="check"><span class="box"></span> 位置 Where</span>
+                <span class="check"><span class="box"></span> 行動 What</span>
+                <span class="check"><span class="box"></span> 狀態 State</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1178,11 +1075,8 @@ input[type="checkbox"] {
     }
 
     function generateResponseId() {
-    const now = new Date();
-    const timestamp = now.getTime().toString().slice(-6); // 取得時間戳末6碼
-    const dateStr = now.toISOString().slice(0,10).replace(/-/g, ''); // 20260418
-    return `ID-${dateStr}-${timestamp}`; // 生成如 ID-20260418-543210
-   }
+      return 'R' + Date.now();
+    }
 
     function getBaseMeta(responseId) {
       return {
@@ -1237,92 +1131,94 @@ input[type="checkbox"] {
       const rows = collectRows('PREVIEW');
       showStatus(`目前可整理 ${rows.length} 筆資料。`, 'success');
     }
-function submitQuestionnaire() {
+
+  function submitQuestionnaire() {
+    const submitBtn = document.getElementById('submit_btn');
     const responseId = generateResponseId();
     const profileData = {};
-    profileData["response_num"] = responseId; 
+    profileData["response_num"] = responseId;
 
-    // 1. 只抓取「基本資料」區塊的輸入項，排除表格內的 select 和 input
-    // 透過 selector 排除掉 table 內的元件
-    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
-        if (el.name) {
-            if (el.type === 'radio' || el.type === 'checkbox') {
-                if (el.checked) {
-                    if (!profileData[el.name]) {
-                        profileData[el.name] = el.value;
-                    } else {
-                        profileData[el.name] += "," + el.value;
-                    }
-                }
+    // --- 1. 執行全數填寫檢查 ---
+    const allPanels = document.querySelectorAll('.tab-panel');
+    let firstMissingTab = null;
+    let missingTotal = 0;
+
+    allPanels.forEach(panel => {
+        const rows = panel.querySelectorAll('.term-row');
+        const categoryName = panel.dataset.panel;
+        
+        rows.forEach(tr => {
+            const isUsed = tr.querySelector('select[name="is_used"]').value;
+            const frequency = tr.querySelector('select[name="frequency"]').value;
+            const importance = tr.querySelector('select[name="importance"]').value;
+
+            if (!isUsed || !frequency || !importance) {
+                missingTotal++;
+                tr.style.backgroundColor = "rgba(185, 28, 28, 0.1)"; // 標示紅色背景
+                if (!firstMissingTab) firstMissingTab = categoryName; 
             } else {
-                profileData[el.name] = el.value;
+                tr.style.backgroundColor = ""; // 填寫正確則恢復
             }
-        }
+        });
     });
 
-    // 2. 抓取表格資料
-    const tableRows = collectRows(responseId);
+    // 如果有漏填，切換到該分頁並提示
+    if (missingTotal > 0) {
+        // 自動切換到第一個漏填的分頁
+        const targetTabBtn = document.querySelector(`.tab-btn[data-tab="${firstMissingTab}"]`);
+        if (targetTabBtn) targetTabBtn.click();
 
-    // 3. 嚴格檢查：若 tableRows 為空，給予明顯提示
-    if (tableRows.length === 0) {
-        showStatus('錯誤：請至少在「語詞評估清單」表格中填寫一筆資料（例如選擇是否使用）。', 'error');
-        alert('請至少在分頁表格（人員狀態/危險警示/緊急求救）中選擇一項語詞評估！');
+        showStatus(`錯誤：尚有 ${missingTotal} 個項目未評估，請全數填寫。`, 'error');
+        alert(`專家您好，為了研究完整性，請務必完成所有語詞項目的評估（包含是否使用、頻率與重要性）。目前仍有 ${missingTotal} 處未填。`);
         return;
     }
 
     if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
-    const finalData = {
-        profile: profileData,
-        tableData: tableRows
-    };
+    // --- 2. 收集基本資料 ---
+    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        if (el.name) {
+            if (el.type === 'radio' || el.type === 'checkbox') {
+                if (el.checked) {
+                    if (!profileData[el.name]) { profileData[el.name] = el.value; } 
+                    else { profileData[el.name] += "," + el.value; }
+                }
+            } else { profileData[el.name] = el.value; }
+        }
+    });
+
+    const tableRows = collectRows(responseId);
+    const finalData = { profile: profileData, tableData: tableRows };
 
     showStatus('正在傳送資料...', 'success');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "傳送中...";
 
-    fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
+    // --- 3. 傳送資料 ---
+    fetch("https://google.com", {
         method: "POST",
-        mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
+        mode: "no-cors",
         body: JSON.stringify(finalData),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => {
-        showStatus(`成功送出！編號：${responseId}`, 'success'); 
-        alert(`送出成功！您的問卷編號是：${responseId}`);
+        // --- 4. 成功後顯示感謝語並鎖定 ---
+        showStatus('傳送成功！', 'success');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "問券資料已傳送，感謝您的填寫及支援，請關閉視窗";
+        submitBtn.style.background = "#5b6b7c";
+        submitBtn.style.width = "100%";
+        
+        alert(`資料已成功送出！\n問卷編號：${responseId}\n感謝您的寶貴建議。`);
     })
     .catch(err => { 
         console.error("Submit Error:", err);
-        showStatus('送出失敗，請查看瀏覽器控制台報錯', 'error'); 
+        showStatus('送出失敗，請檢查網路後重試', 'error'); 
+        submitBtn.disabled = false;
+        submitBtn.innerText = "重新送出";
     });
 }
-function setupTabs() {
-  const tabs = document.querySelectorAll('.tab-btn');
-  const panels = document.querySelectorAll('.tab-panel');
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-
-      // 1. 移除所有按鈕的 active 狀態，並隱藏所有面板
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.classList.add('hidden'));
-
-      // 2. 為點擊的按鈕加入 active，並顯示對應面板
-      tab.classList.add('active');
-      const targetPanel = document.querySelector(`.tab-panel[data-panel="${target}"]`);
-      if (targetPanel) {
-        targetPanel.classList.remove('hidden');
-      }
-    });
-  });
-}
-    function init() {
-      document.querySelectorAll('.tab-panel').forEach(panel => {
-        renderTable(panel.dataset.panel, panel);
-      });
-      setupTabs();
-      document.getElementById('preview_btn')?.addEventListener('click', previewCount);
-      document.getElementById('submit_btn')?.addEventListener('click', submitQuestionnaire);
-    }
 
     init();
   </script>
