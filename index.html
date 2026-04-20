@@ -1253,43 +1253,76 @@ input[type="checkbox"] {
 function submitQuestionnaire() {
     const responseId = generateResponseId();
     
-    // 獲取表格資料與檢查結果
-    const result = collectRows(responseId);
-    const tableRows = result.data;
-
-    // 3. 嚴格檢查：確保每一列都填了
-    if (result.incompleteCount > 0) {
-        const msg = `表格中還有 ${result.incompleteCount} 條語詞尚未評估完整，請檢查標註紅色的列。`;
+    // 1. 抓取並檢查表格資料 (原本的表格嚴格檢查)
+    const tableResult = collectRows(responseId);
+    const tableRows = tableResult.data;
+    if (tableResult.incompleteCount > 0) {
+        const msg = `表格中還有 ${tableResult.incompleteCount} 條語詞尚未評估完整，請檢查標註紅色的列。`;
         showStatus('錯誤：' + msg, 'error');
         alert(msg);
         return;
     }
 
-    // 原有的基本資料抓取邏輯...
-    const profileData = {};
-    profileData["response_num"] = responseId;
-    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
-        // ... (保持原樣)
+    // 2. 新增：檢查所有 Radio Button 是否都有勾選
+    // 找出頁面中所有 radio 的 name（例如: method, q3_1_exp, q6_3_impact 等）
+    const radioGroups = [...new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name))];
+    let missingGroups = [];
+
+    radioGroups.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+            missingGroups.push(name);
+            // 視覺提示：將沒選的問題區域標示出來
+            const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
+            if (container) container.style.borderLeft = '4px solid var(--danger)';
+        } else {
+            const container = document.querySelector(`input[name="${name}"]`).closest('.subsection, .field, .checkbox-row');
+            if (container) container.style.borderLeft = '';
+        }
     });
 
+    if (missingGroups.length > 0) {
+        const msg = "基本資料中有單選題尚未勾選，請檢查紅線標示處。";
+        showStatus('錯誤：' + msg, 'error');
+        alert(msg);
+        return;
+    }
+
+    // 3. 資料收集 (Profile 部分)
+    const profileData = {};
+    profileData["response_num"] = responseId;
+    
+    // 處理一般文字、日期與下拉選單
+    document.querySelectorAll('.page-body input:not(.term-row input):not([type="radio"]):not([type="checkbox"]), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        if (el.name) profileData[el.name] = el.value;
+    });
+
+    // 處理 Radio Button 的值
+    radioGroups.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        profileData[name] = checked ? checked.value : "";
+    });
+
+    // 處理 Checkbox (複選題，如 WWWS 結構)
+    const infoContent = Array.from(document.querySelectorAll('input[name="info_content"]:checked')).map(cb => cb.value).join(', ');
+    profileData["info_content"] = infoContent;
+
+    // 4. 確認與送出 (鎖定按鈕邏輯)
     if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
     
     const finalData = {
         profile: profileData,
         tableData: tableRows
     };
-    
-    
-    showStatus('正在傳送資料...', 'success');
 
+    // 鎖定按鈕並執行 Fetch (保持你原本 index 0.1.22 的 fetch 邏輯)
+    showStatus('正在傳送資料...', 'success');
     const submitBtn = document.getElementById('submit_btn');
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.5';
-        submitBtn.style.cursor = 'not-allowed';
         submitBtn.textContent = '資料傳送中...';
     }
-
     fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
         mode: "no-cors",
@@ -1297,25 +1330,17 @@ function submitQuestionnaire() {
         headers: { "Content-Type": "application/json" }
     })
     .then(res => {
-        // --- 修改：成功送出後的顯示訊息 ---
         const successMsg = `資料已填寫完畢，感謝您提供寶貴實務經驗，請結束視窗。 (編號：${responseId})`;
         showStatus(successMsg, 'success'); 
-        
-        if (submitBtn) {
-            submitBtn.textContent = '已成功送出';
-        }
-        
+        if (submitBtn) submitBtn.textContent = '已成功送出';
         alert(successMsg);
     })
-    .catch(err => { 
+    .catch(err => {
         console.error("Submit Error:", err);
-        showStatus('送出失敗，請檢查網路連線或查看控制台報錯', 'error'); 
-        
-        // 如果失敗了，把按鈕還原讓使用者可以重試
+        showStatus('送出失敗，請檢查網路連線', 'error');
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
-            submitBtn.style.cursor = 'pointer';
             submitBtn.textContent = '重新嘗試送出';
         }
     });
