@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>火場無線電通訊關鍵語詞研究－專家訪談表</title>
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GUp4L78M88Q-hPX9TQfv4cV37ewQvuvn7oAhKgyGsgP5mf6gOpsOZovpgTStR6psd-v4C9KzXQMk0HEkxjIZKwgbxGYfvIcamibZBhsQVqESdXm7BGQot6CV3b266oDzVTN2qM4gcB_CIQ4k4YJ_AT1dAZ9XBAWWhR9FcPX85OzMjy7GL-uqQOnfOfAl-YZRsgmuzWcCgPQltWBz0Ph81X4isA-aRfHAAQKKIBWxc4c2VwREOBbzuwVu8jXEBI6Qfe1g65oC9ti2PtLGmSx-sA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/..." charset="UTF-8" defer></script>
+<style>
     :root {
       --navy: #17324d;
       --navy-2: #24496f;
@@ -1364,35 +1365,45 @@ function submitQuestionnaire() {
     });
 }
 
+// 修改後的邏輯：只有在切換頁籤時，如果該面板是空的，才去畫表格
 function setupTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
-
+  
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
+      const targetPanel = document.querySelector(`.tab-panel[data-panel="${target}"]`);
 
-      // 1. 移除所有按鈕的 active 狀態，並隱藏所有面板
+      // --- 新增優化邏輯 ---
+      // 如果面板裡面還沒有內容，才執行渲染，避免重複運算
+      if (targetPanel && targetPanel.innerHTML.trim() === "") {
+        renderTable(target, targetPanel);
+      }
+      // ------------------
+
       tabs.forEach(t => t.classList.remove('active'));
       panels.forEach(p => p.classList.add('hidden'));
-
-      // 2. 為點擊的按鈕加入 active，並顯示對應面板
+      
       tab.classList.add('active');
-      const targetPanel = document.querySelector(`.tab-panel[data-panel="${target}"]`);
       if (targetPanel) {
         targetPanel.classList.remove('hidden');
       }
     });
   });
 }
-    function init() {
-      document.querySelectorAll('.tab-panel').forEach(panel => {
-        renderTable(panel.dataset.panel, panel);
-      });
-      setupTabs();
-      document.getElementById('preview_btn')?.addEventListener('click', previewCount);
-      document.getElementById('submit_btn')?.addEventListener('click', submitQuestionnaire);
-    }
+
+function init() {
+  // 修改：初始載入時，只渲染預設顯示的「人員狀態」面板 (Personnel_Status)
+  const defaultPanel = document.querySelector('.tab-panel[data-panel="Personnel_Status"]');
+  if (defaultPanel) {
+    renderTable("Personnel_Status", defaultPanel);
+  }
+  
+  setupTabs();
+  document.getElementById('preview_btn')?.addEventListener('click', previewCount);
+  document.getElementById('submit_btn')?.addEventListener('click', submitQuestionnaire);
+}
 
     init();
   </script>
