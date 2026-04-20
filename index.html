@@ -1240,9 +1240,10 @@ input[type="checkbox"] {
 function submitQuestionnaire() {
     const responseId = generateResponseId();
     const profileData = {};
-    profileData["response_num"] = responseId;
+    profileData["response_num"] = responseId; 
 
-    // 1. 抓取基本資料
+    // 1. 只抓取「基本資料」區塊的輸入項，排除表格內的 select 和 input
+    // 透過 selector 排除掉 table 內的元件
     document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
         if (el.name) {
             if (el.type === 'radio' || el.type === 'checkbox') {
@@ -1262,25 +1263,14 @@ function submitQuestionnaire() {
     // 2. 抓取表格資料
     const tableRows = collectRows(responseId);
 
-    // --- 修正 1：確保「人員狀態」、「危險警示」、「緊急求救」三個分頁都有資料 ---
-    const categoriesFilled = new Set(tableRows.map(row => row.category));
-    const requiredCategories = ['Personnel_Status', 'Risk_Alert', 'Mayday'];
-    const missingCategories = requiredCategories.filter(cat => !categoriesFilled.has(cat));
-
-    if (missingCategories.length > 0) {
-        const catNames = {
-            'Personnel_Status': '人員狀態',
-            'Risk_Alert': '危險警示',
-            'Mayday': '緊急求救'
-        };
-        const missingNames = missingCategories.map(c => catNames[c]).join('、');
-        
-        showStatus(`尚未完成：請確保「${missingNames}」三個分頁都至少評估了一項語詞。`, 'error');
-        alert(`請完成所有分頁填寫：還缺少「${missingNames}」的部分！`);
+    // 3. 嚴格檢查：若 tableRows 為空，給予明顯提示
+    if (tableRows.length === 0) {
+        showStatus('錯誤：請至少在「語詞評估清單」表格中填寫一筆資料（例如選擇是否使用）。', 'error');
+        alert('請至少在分頁表格（人員狀態/危險警示/緊急求救）中選擇一項語詞評估！');
         return;
     }
 
-    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出資料並關閉視窗嗎？`)) return;
+    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
 
     const finalData = {
         profile: profileData,
@@ -1289,34 +1279,20 @@ function submitQuestionnaire() {
 
     showStatus('正在傳送資料...', 'success');
 
-    // 3. 傳送到 Google Sheets
-    fetch("https://google.com", {
+    fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
-        mode: "no-cors", 
+        mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
         body: JSON.stringify(finalData),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => {
-        // --- 修正 2：發送完成訊息後關閉視窗 ---
         showStatus(`成功送出！編號：${responseId}`, 'success'); 
-        alert(`送出成功！您的問卷編號是：${responseId}\n點擊「確定」後視窗將自動關閉。`);
-        
-        // 執行關閉動作
-        window.close();
-
-        // 備援方案：如果 window.close() 被瀏覽器阻擋，則跳轉到空白頁
-        setTimeout(() => {
-            if (!window.closed) {
-                location.href = "about:blank";
-            }
-        }, 300);
+        alert(`送出成功！您的問卷編號是：${responseId}`);
     })
     .catch(err => { 
         console.error("Submit Error:", err);
         showStatus('送出失敗，請查看瀏覽器控制台報錯', 'error'); 
     });
-}
-}
 }
 function setupTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
