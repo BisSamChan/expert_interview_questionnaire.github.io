@@ -1253,31 +1253,54 @@ input[type="checkbox"] {
 function submitQuestionnaire() {
     const responseId = generateResponseId();
     
-    // 獲取表格資料與檢查結果
-    const result = collectRows(responseId);
-    const tableRows = result.data;
-
-    // 3. 嚴格檢查：確保每一列都填了
-    if (result.incompleteCount > 0) {
-        const msg = `表格中還有 ${result.incompleteCount} 條語詞尚未評估完整，請檢查標註紅色的列。`;
-        showStatus('錯誤：' + msg, 'error');
-        alert(msg);
+     // 1. 先檢查表格 (原本討論的邏輯)
+    const tableResult = collectRows(responseId);
+    if (tableResult.incompleteCount > 0) {
+        alert(`表格中還有 ${tableResult.incompleteCount} 條語詞尚未評估完整！`);
         return;
     }
 
-    // 原有的基本資料抓取邏輯...
-    const profileData = {};
-    profileData["response_num"] = responseId;
-    document.querySelectorAll('.page-body input:not(.term-row input), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
-        // ... (保持原樣)
+    // 2. 新增：檢查所有的 Radio Button 是否都有選
+    // 找出頁面中所有的 radio name（去除重複）
+    const radioNames = [...new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name))];
+    let missingRadios = [];
+
+    radioNames.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+            // 如果沒選，紀錄這個欄位的標題（假設標題在父元素或 label 裡）
+            // 這裡簡單紀錄 name，你也可以根據 HTML 結構抓取標題文字
+            missingRadios.push(name);
+            
+            // 視覺提示：幫沒選的選項區域加紅框 (可選)
+            const parent = document.querySelector(`input[name="${name}"]`).closest('.question-block, td, div');
+            if (parent) parent.style.border = '1px solid red';
+        } else {
+            const parent = document.querySelector(`input[name="${name}"]`).closest('.question-block, td, div');
+            if (parent) parent.style.border = '';
+        }
     });
 
-    if (!confirm(`您的問卷編號為：${responseId}\n確定要送出嗎？`)) return;
+    if (missingRadios.length > 0) {
+        showStatus('錯誤：基本資料中有選項尚未勾選！', 'error');
+        alert('基本資料中有單選題尚未勾選，請檢查紅框處。');
+        return;
+    }
+
+    // 3. 抓取資料 (包含 Profile)
+    const profileData = {};
+    profileData["response_num"] = responseId;
     
-    const finalData = {
-        profile: profileData,
-        tableData: tableRows
-    };
+    // 處理一般 Input/Select/Textarea
+    document.querySelectorAll('.page-body input:not(.term-row input):not([type="radio"]), .page-body textarea, .page-body select:not(.term-row select)').forEach(el => {
+        if (el.name) profileData[el.name] = el.value;
+    });
+
+    // 處理 Radio (確保選中的值被填入)
+    radioNames.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (checked) profileData[name] = checked.value;
+    });
     
     
     showStatus('正在傳送資料...', 'success');
