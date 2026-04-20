@@ -1282,19 +1282,42 @@ function submitQuestionnaire() {
     
     showStatus('正在傳送資料...', 'success');
 
+    const submitBtn = document.getElementById('submit_btn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+        submitBtn.textContent = '資料傳送中...';
+    }
+
     fetch("https://script.google.com/macros/s/AKfycbwR6i10uZIwchnaZg009F7uAScjsA87Z2lt6H4SV3MpZasA7kVURNItUJYUrFegDCTF/exec", {
         method: "POST",
-        mode: "no-cors", // 加上這個可以避開大多數瀏覽器的安全性阻擋
+        mode: "no-cors",
         body: JSON.stringify(finalData),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => {
-        showStatus(`成功送出！編號：${responseId}`, 'success'); 
-        alert(`送出成功！您的問卷編號是：${responseId}`);
+        // --- 修改：成功送出後的顯示訊息 ---
+        const successMsg = `資料已填寫完畢，感謝您提供寶貴實務經驗，請結束視窗。 (編號：${responseId})`;
+        showStatus(successMsg, 'success'); 
+        
+        if (submitBtn) {
+            submitBtn.textContent = '已成功送出';
+        }
+        
+        alert(successMsg);
     })
     .catch(err => { 
         console.error("Submit Error:", err);
-        showStatus('送出失敗，請查看瀏覽器控制台報錯', 'error'); 
+        showStatus('送出失敗，請檢查網路連線或查看控制台報錯', 'error'); 
+        
+        // 如果失敗了，把按鈕還原讓使用者可以重試
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+            submitBtn.textContent = '重新嘗試送出';
+        }
     });
 }
 function setupTabs() {
