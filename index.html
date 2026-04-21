@@ -582,29 +582,23 @@ input[type="checkbox"] {
       font-size: 13px;
     }
 
-  /* 只針對問卷內部的選項列進行手機版優化 */
+ /* 針對手機版 (螢幕寬度小於 600px) 的特別優化 */
 @media screen and (max-width: 600px) {
-  /* 鎖定問卷內容區塊內的 checkbox-row */
-  .tab-panel .checkbox-row {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* 強制 2x2 */
-    gap: 8px !important;
+  .checkbox-row {
+    display: grid !important; /* 使用 Grid 佈局最精準 */
+    grid-template-columns: 1fr 1fr; /* 強制切分為兩欄 */
+    gap: 10px !important;
     width: 100% !important;
   }
 
-  .tab-panel .check {
+  .check {
     display: flex !important;
-    width: 100% !important;
-    padding: 10px 4px !important;
-    font-size: 13px !important;
-    box-sizing: border-box !important;
+    width: 100% !important; /* 撐滿 Grid 的格子 */
     margin: 0 !important;
-  }
-
-  /* 確保第一頁的圓圈保持原本的顯示方式 */
-  .hero-grid, .module-card, .circle-item {
-    display: flex !important; 
-    /* 這裡維持您原本第一頁的設定，不受 grid 影響 */
+    padding: 10px 5px !important;
+    justify-content: flex-start !important;
+    font-size: 13px !important; /* 稍微縮小字體確保「狀態」塞得下 */
+    box-sizing: border-box !important;
   }
 }
 
