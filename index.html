@@ -370,29 +370,28 @@ select:focus {
 }
 
 
-   /* 1. 確保容器不換行，且選項水平均分 */
 .checkbox-row {
   display: flex;
-  flex-wrap: nowrap;     /* 強制不換行 */
-  gap: 6px;              /* 縮小選項間距 */
+  /* 修改：改為 wrap 允許換行 */
+  flex-wrap: wrap; 
+  /* 修改：讓間距固定 */
+  gap: 8px; 
   width: 100%;
-  justify-content: space-between; /* 讓三個選項平均分配寬度 */
 }
 
-/* 2. 縮小單個選項的寬度與內距 */
 .check {
-  flex: 1;               /* 讓三個選項平分總寬度 */
+  /* 修改：設定寬度為計算值，減去 gap 後大約佔 48%，達成一行兩個 */
+  flex: 0 0 calc(50% - 8px); 
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px;              /* 縮小圖示與文字間距 */
-  padding: 8px 4px;      /* 縮小左右內距，騰出空間 */
+  justify-content: flex-start; /* 改回靠左對齊比較美觀 */
+  gap: 6px;
+  padding: 10px 8px;
   background: var(--soft);
-  border-radius: 10px;
-  font-size: 13px;       /* 稍微調降字體大小，確保文字不溢出 */
-  white-space: nowrap;   /* 防止文字換行 */
+  border-radius: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
-
 /* 3. 確保 input 框不會佔太多空間 */
 .check input {
   margin: 0;
