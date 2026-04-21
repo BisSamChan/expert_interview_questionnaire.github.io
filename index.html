@@ -582,13 +582,25 @@ input[type="checkbox"] {
       font-size: 13px;
     }
 
-    @media (max-width: 900px) {
-      .hero-grid,
-      .research-meta,
-      .info-grid,
-      .wwws-grid {
-        grid-template-columns: 1fr;
-      }
+   /* 針對手機版 (螢幕寬度小於 600px) 的特別優化 */
+@media screen and (max-width: 600px) {
+  .checkbox-row {
+    display: grid !important; /* 使用 Grid 佈局最精準 */
+    grid-template-columns: 1fr 1fr; /* 強制切分為兩欄 */
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .check {
+    display: flex !important;
+    width: 100% !important; /* 撐滿 Grid 的格子 */
+    margin: 0 !important;
+    padding: 10px 5px !important;
+    justify-content: flex-start !important;
+    font-size: 13px !important; /* 稍微縮小字體確保「狀態」塞得下 */
+    box-sizing: border-box !important;
+  }
+}
 
       .cover-body,
       .page-body {
