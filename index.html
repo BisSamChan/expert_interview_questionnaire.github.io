@@ -371,23 +371,27 @@ select:focus {
 
 
     .checkbox-row {
-      display: flex;
-      flex-wrap: nowrap; /* 強制不換行 */
-      gap: 16px;         /* 選項之間的間距 */
-      align-items: center;
-   }
+     display: flex;
+     /* 改為 column 讓選項垂直排列 */
+     flex-direction: column; 
+     /* 讓選項貼齊左側 */
+     align-items: flex-start; 
+     gap: 10px;
+     width: 100%;
+}
 
    .check {
+    /* 讓每個選項按鈕寬度自動撐滿，方便手指點選 */
+     width: 100%; 
+     box-sizing: border-box;
      display: inline-flex;
      align-items: center;
-     gap: 8px;          /* 圓圈與文字的間距 */
-     white-space: nowrap; /* 強制文字不換行 */
+     gap: 8px;
      background: var(--soft);
-     padding: 8px 16px;
+     padding: 10px 16px; /* 稍微增加高度，手機更好點 */
      border-radius: 12px;
      cursor: pointer;
-     min-width: fit-content; /* 根據內容自動調整寬度 */
-   }
+}
 
 
    .check:hover {
@@ -976,7 +980,7 @@ input[type="checkbox"] {
         <div class="section">
           <div class="section-title">
             <h2>九、訪談內容-通訊結構判斷 WWWS</h2>
-            <span class="section-tag">Content Structure Analysis</span>
+            <span class="section-tag">Structure Judgment</span>
           </div>
           <div class="section-content">
             <div class="subsection">
