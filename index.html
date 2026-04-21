@@ -371,23 +371,25 @@ select:focus {
 
 
     .checkbox-row {
-      display: flex;
-      flex-wrap: nowrap; /* 強制不換行 */
-      gap: 16px;         /* 選項之間的間距 */
-      align-items: center;
-   }
+  display: flex;
+  flex-wrap: wrap; /* 從 nowrap 改為 wrap */
+  gap: 10px;       /* 選項間距 */
+  align-items: center;
+}
 
-   .check {
-     display: inline-flex;
-     align-items: center;
-     gap: 8px;          /* 圓圈與文字的間距 */
-     white-space: nowrap; /* 強制文字不換行 */
-     background: var(--soft);
-     padding: 8px 16px;
-     border-radius: 12px;
-     cursor: pointer;
-     min-width: fit-content; /* 根據內容自動調整寬度 */
-   }
+  .check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--soft);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  /* 加上以下設定 */
+  flex: 1 1 auto;         /* 讓選項在手機上自動撐滿或換行 */
+  white-space: normal;    /* 允許文字長度過長時換行 */
+  justify-content: center; /* 文字置中 */
+}
 
 
    .check:hover {
@@ -573,13 +575,18 @@ input[type="checkbox"] {
       font-size: 13px;
     }
 
-    @media (max-width: 900px) {
-      .hero-grid,
-      .research-meta,
-      .info-grid,
-      .wwws-grid {
-        grid-template-columns: 1fr;
-      }
+   @media (max-width: 900px) {
+  /* 讓表格容器可以橫向捲動 */
+  .tab-panel {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -10px; /* 稍微增加邊距空間 */
+  }
+
+  table {
+    min-width: 700px; /* 強制表格維持一定寬度，避免擠壓變形 */
+  }
+}
 
       .cover-body,
       .page-body {
@@ -976,7 +983,7 @@ input[type="checkbox"] {
         <div class="section">
           <div class="section-title">
             <h2>九、訪談內容-通訊結構判斷 WWWS</h2>
-            <span class="section-tag">Content Structure Analysis</span>
+            <span class="section-tag">Structure Judgment</span>
           </div>
           <div class="section-content">
             <div class="subsection">
